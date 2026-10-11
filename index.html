@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --wa-bg:#efeae2;
-  --wa-header:#008069;
+  --wa-header:#006d59;
   --wa-header-text:#ffffff;
   --wa-bubble-in:#ffffff;
   --wa-bubble-out:#d9fdd3;
@@ -17,8 +17,8 @@
   --wa-text-main:#111b21;
   --wa-text-dim:#667781;
   --wa-border:#d1d7db;
-  --wa-green:#008069;
-  --wa-green-hover:#006d59;
+  --wa-green:#006d59;
+  --wa-green-hover:#005a49;
   --wa-red:#ea4335;
   --wa-blue:#3b82f6;
   --wa-card-bg:#ffffff;
@@ -63,7 +63,7 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 .q-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .q-number{font-size:11px;color:var(--wa-green);font-weight:700;text-transform:uppercase}
 .q-status{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600}
-.q-status.pass{background:rgba(0,128,105,0.1);color:var(--wa-green)}
+.q-status.pass{background:rgba(0,109,89,0.1);color:var(--wa-green)}
 .q-status.fail{background:rgba(234,67,53,0.1);color:var(--wa-red)}
 .q-status.na-status{background:rgba(102,119,129,0.1);color:var(--wa-text-dim)}
 .q-text{font-size:14px;color:var(--wa-text-main);margin-bottom:10px;line-height:1.5}
@@ -91,9 +91,6 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 .btn-danger{background:var(--wa-red);color:#fff;border:none;border-radius:8px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;margin-top:8px}
 .logo-preview{margin-top:8px;text-align:center}
 .logo-preview img{max-width:120px;max-height:80px;border-radius:8px;border:1px solid var(--wa-border)}
-.step-indicator{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
-.step-dot{width:8px;height:8px;border-radius:50%;background:var(--wa-border);transition:all .3s}
-.step-dot.active{background:var(--wa-green);width:24px;border-radius:4px}
 </style>
 </head>
 <body>
@@ -112,10 +109,10 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 
 <div class="modal-overlay" id="menuModal">
   <div class="modal">
-    <h3>️ Menu</h3>
+    <h3>⚙️ Menu</h3>
     <div style="display:flex;flex-direction:column;gap:10px">
       <button class="btn-secondary" onclick="backupData()">💾 Backup Data</button>
-      <button class="btn-secondary" onclick="restoreData()">📂 Restore Data</button>
+      <button class="btn-secondary" onclick="restoreData()"> Restore Data</button>
       <button class="btn-danger" onclick="resetSetup()">🔄 Reset Setup</button>
       <button class="btn-secondary" onclick="closeMenu()">✕ Close</button>
     </div>
@@ -143,7 +140,7 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
     <p style="font-size:13px;color:var(--wa-text-dim);margin-bottom:16px">Select a photo from your device or take a new one. Please use <strong>landscape orientation</strong> for best results.</p>
     <input type="file" id="photoInput" accept="image/*" class="file-input" onchange="handlePhoto(event)">
     <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn-primary" style="margin-top:0" onclick="document.getElementById('photoInput').click()">📷 Select or Take Photo</button>
+      <button class="btn-primary" style="margin-top:0" onclick="document.getElementById('photoInput').click()"> Select or Take Photo</button>
       <button class="btn-danger" style="margin-top:0" onclick="closePhotoModal()">Cancel</button>
     </div>
   </div>
@@ -362,7 +359,7 @@ function askPowerSource(){
       <div class="msg-label">Step 3 of 3: Power Source</div>
       <p style="margin-bottom:12px;color:var(--wa-text-dim);font-size:13px">Does <strong>${state.toolInfo.name}</strong> require a power source to operate?</p>
       <div class="options-row" style="flex-direction:column;align-items:stretch">
-        <button class="opt-btn" onclick="setPower(true)" style="padding:14px;font-size:14px"> Yes, it needs power</button>
+        <button class="opt-btn" onclick="setPower(true)" style="padding:14px;font-size:14px">⚡ Yes, it needs power</button>
         <button class="opt-btn na" onclick="setPower(false)" style="padding:14px;font-size:14px">🚫 No power required</button>
       </div>
     </div>
@@ -392,9 +389,9 @@ function showPowerTypeSelection(){
         <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (36V / 40V / 54V)')">🔋 Battery / Cordless (36V+)</button>
         <button class="opt-btn" onclick="selectPowerType('110V Mains (Site)')">🔌 110V Mains (Site)</button>
         <button class="opt-btn" onclick="selectPowerType('240V Mains (Domestic)')">🔌 240V Mains (Domestic)</button>
-        <button class="opt-btn" onclick="selectPowerType('400V / 3-Phase')"> 400V / 3-Phase</button>
+        <button class="opt-btn" onclick="selectPowerType('400V / 3-Phase')">⚡ 400V / 3-Phase</button>
         <button class="opt-btn" onclick="selectPowerType('Petrol')">⛽ Petrol</button>
-        <button class="opt-btn" onclick="selectPowerType('Diesel')"> Diesel</button>
+        <button class="opt-btn" onclick="selectPowerType('Diesel')">⛽ Diesel</button>
         <button class="opt-btn" onclick="selectPowerType('Pneumatic / Compressed Air')">💨 Pneumatic / Compressed Air</button>
         <button class="opt-btn" onclick="selectPowerType('Hydraulic')">🔧 Hydraulic</button>
       </div>
@@ -458,7 +455,7 @@ function renderQuestion(){
           <button class="photo-btn" onclick="openPhoto(${q.id})"> Add Photo Evidence</button>
           <div class="photo-note">📐 Please use landscape orientation for clarity</div>
           <div id="photoPreview_${q.id}">
-            ${hasExistingPhoto ? `<div class="photo-preview"><img src="${state.photos[q.id]}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${q.id})">✕</button></div>` : ''}
+            ${hasExistingPhoto ? `<div class="photo-preview"><img src="${state.photos[q.id]}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${q.id})"></button></div>` : ''}
           </div>
         </div>
         <div class="form-group" style="margin-top:8px">
@@ -523,9 +520,9 @@ function showToolCompleteOptions(){
         <div class="report-item"><span style="color:var(--wa-red)">✗ Fail</span><span>${failCount}</span></div>
         <div class="report-item"><span style="color:var(--wa-text-dim)">— N/A</span><span>${naCount}</span></div>
       </div>
-      ${failCount > 0 ? `<div class="report-section"><h4>️ Failed Items</h4>${state.answers.filter(a=>a.answer==='Fail').map(a=>{const q=questions.find(qq=>qq.id===a.qId);return `<div class="report-item"><span style="color:var(--wa-red);font-size:12px">${q?q.text.substring(0,50)+'...':'Item'}</span></div>`;}).join('')}</div>` : ''}
+      ${failCount > 0 ? `<div class="report-section"><h4>⚠️ Failed Items</h4>${state.answers.filter(a=>a.answer==='Fail').map(a=>{const q=questions.find(qq=>qq.id===a.qId);return `<div class="report-item"><span style="color:var(--wa-red);font-size:12px">${q?q.text.substring(0,50)+'...':'Item'}</span></div>`;}).join('')}</div>` : ''}
       <div class="msg-label" style="margin-top:12px">What would you like to do next?</div>
-      <button class="btn-primary" style="margin-top:8px" onclick="addAnotherTool()"> Add Another Tool</button>
+      <button class="btn-primary" style="margin-top:8px" onclick="addAnotherTool()">➕ Add Another Tool</button>
       <button class="btn-secondary" style="margin-top:8px" onclick="generateReport()">📄 Generate Final Report & Sign</button>
     </div>
   `);
@@ -656,30 +653,29 @@ function generatePDF(){
       return true;
     });
     
-    // Tool details section
     allToolSections += `
-      <div class="tool-header" style="background:#f0f7f4;padding:12px;border-radius:8px;margin:16px 0 8px 0;border-left:4px solid #008069">
-        <h3 style="color:#008069;margin:0 0 8px 0;font-size:14px">Tool ${idx+1}: ${inspection.toolInfo.name}</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:11px">
-          <span><strong>Owner:</strong> ${inspection.owner}</span>
-          <span><strong>Category:</strong> ${inspection.toolInfo.category}</span>
-          <span><strong>Serial No:</strong> ${inspection.toolInfo.serial || '—'}</span>
-          <span><strong>Power Source:</strong> ${inspection.powerSource}</span>
-          <span><strong>Location:</strong> ${inspection.toolInfo.location || '—'}</span>
-          <span><strong>Questions:</strong> ${inspQuestions.length}</span>
+      <div class="tool-header">
+        <h3>Tool ${idx+1}: ${inspection.toolInfo.name}</h3>
+        <div class="tool-meta">
+          <div><strong>Owner:</strong> ${inspection.owner}</div>
+          <div><strong>Category:</strong> ${inspection.toolInfo.category}</div>
+          <div><strong>Serial No:</strong> ${inspection.toolInfo.serial || '—'}</div>
+          <div><strong>Power Source:</strong> ${inspection.powerSource}</div>
+          <div><strong>Location:</strong> ${inspection.toolInfo.location || '—'}</div>
+          <div><strong>Questions:</strong> ${inspQuestions.length}</div>
         </div>
       </div>
     `;
     
-    allToolSections += `<table class="inspection-table"><thead><tr><th>#</th><th>Category</th><th>Question</th><th>Result</th><th>Comments</th></tr></thead><tbody>`;
+    allToolSections += `<table><thead><tr><th>#</th><th>Category</th><th>Question</th><th>Result</th><th>Comments</th></tr></thead><tbody>`;
     
     inspection.answers.forEach(a=>{
       const q = inspQuestions.find(qq=>qq.id===a.qId);
       if(!q) return;
       globalRowNum++;
-      const color = a.answer==='Pass'?'#008069':a.answer==='Fail'?'#ea4335':'#667781';
+      const color = a.answer==='Pass'?'#006d59':a.answer==='Fail'?'#ea4335':'#667781';
       const photoHtml = inspection.photos && inspection.photos[q.id] 
-        ? `<br><img src="${inspection.photos[q.id]}" style="max-width:180px;height:100px;object-fit:cover;border:1px solid #ddd;border-radius:4px;margin-top:4px">` 
+        ? `<br><img src="${inspection.photos[q.id]}" style="max-width:160px;height:90px;object-fit:cover;border:1px solid #ddd;border-radius:3px;margin-top:3px">` 
         : '';
       allToolSections += `<tr class="${a.answer==='Fail'?'fail-row':''}">
         <td>${globalRowNum}</td>
@@ -706,9 +702,9 @@ function generatePDF(){
   let failedSummaryHTML = '';
   if(allFailedItems.length > 0){
     failedSummaryHTML = `
-      <div class="failed-summary" style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px;margin:16px 0">
-        <h2 style="color:#ea4335;margin:0 0 8px 0;font-size:14px">⚠️ Failed Items Summary (${allFailedItems.length} issue${allFailedItems.length>1?'s':''})</h2>
-        <table class="failed-table">
+      <div class="failed-summary">
+        <h2>⚠️ Failed Items Summary (${allFailedItems.length} issue${allFailedItems.length>1?'s':''})</h2>
+        <table>
           <thead><tr><th>#</th><th>Owner</th><th>Tool</th><th>Failed Check</th><th>Comments</th></tr></thead>
           <tbody>
             ${allFailedItems.map((item, i) => `
@@ -716,7 +712,7 @@ function generatePDF(){
                 <td>${i+1}</td>
                 <td>${item.owner}</td>
                 <td>${item.toolName}</td>
-                <td style="color:#ea4335">${item.question.substring(0,80)}${item.question.length>80?'...':''}</td>
+                <td style="color:#ea4335">${item.question.substring(0,70)}${item.question.length>70?'...':''}</td>
                 <td>${item.comment||'—'}</td>
               </tr>
             `).join('')}
@@ -726,86 +722,133 @@ function generatePDF(){
     `;
   }
   
-  const logoHtml = state.setup.logo ? `<img src="${state.setup.logo}" style="max-width:120px;margin-bottom:8px"><br>` : '';
-  const sigHtml = state.signature ? `<div style="margin-top:20px"><h2 style="font-size:14px;color:#008069">RCP Signature</h2><img src="${state.signature}" style="max-width:200px;border:1px solid #ddd;border-radius:4px;padding:8px;background:#fff"></div>` : '';
+  const logoHtml = state.setup.logo ? `<img src="${state.setup.logo}" class="header-logo">` : '';
+  const sigHtml = state.signature ? `<div class="signature-section"><h2>RCP Signature</h2><img src="${state.signature}" class="sig-img"><div class="sig-info"><span>${state.setup.rcp} - ${state.setup.rcpRole}</span><span>Signed: ${new Date().toLocaleString()}</span></div></div>` : '';
   
   const html = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>PUWER Inspection Report — ${state.setup.project}</title>
+<title>PUWER Inspection Report</title>
 <style>
   @page {
     size: A4;
-    margin: 20mm 15mm 25mm 15mm;
-    @top-center {
-      content: "${state.setup.company} — PUWER Inspection Report";
-      font-size: 9px;
-      color: #666;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 4px;
-    }
-    @bottom-center {
-      content: "Page " counter(page) " of " counter(pages) " | Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}";
-      font-size: 8px;
-      color: #999;
-      border-top: 1px solid #ddd;
-      padding-top: 4px;
-    }
+    margin: 0;
   }
+  * { box-sizing: border-box; }
   body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
     color: #111;
-    line-height: 1.4;
+    margin: 0;
+    padding: 0;
   }
-  .report-header {
+  
+  .pdf-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #006d59;
+    color: #fff;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    height: 70px;
+  }
+  .header-logo {
+    max-height: 50px;
+    max-width: 120px;
+    background: #fff;
+    padding: 4px;
+    border-radius: 4px;
+  }
+  .header-center {
     text-align: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #008069;
+    flex: 1;
+    margin: 0 20px;
   }
-  .report-header h1 {
-    font-size: 20px;
-    color: #008069;
-    margin: 8px 0 4px 0;
+  .header-center h1 {
+    font-size: 18px;
+    margin: 0 0 4px 0;
+    color: #fff;
+    font-weight: 700;
   }
-  .report-header .subtitle {
+  .header-center .subtitle {
+    font-size: 10px;
+    color: rgba(255,255,255,0.85);
+    margin: 0;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 10px;
+    min-width: 140px;
+  }
+  .header-right .rcp-name {
     font-size: 11px;
-    color: #666;
+    font-weight: 600;
+    margin-bottom: 2px;
   }
+  .header-right .date {
+    font-size: 10px;
+    color: rgba(255,255,255,0.9);
+  }
+  
+  .pdf-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 6px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9px;
+    color: #666;
+    z-index: 1000;
+    height: 30px;
+  }
+  
+  .content {
+    padding: 85px 20px 45px 20px;
+  }
+  
   .meta-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 6px;
-    margin: 12px 0;
+    margin: 12px 0 16px 0;
     font-size: 11px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #006d59;
   }
-  .meta-grid span {
-    padding: 4px 0;
-  }
-  .meta-grid strong {
-    color: #333;
-  }
+  .meta-grid span { padding: 3px 0; }
+  .meta-grid strong { color: #333; }
+  
   .tool-header {
     background: #f0f7f4;
-    padding: 10px 12px;
+    padding: 10px 14px;
     border-radius: 6px;
-    margin: 14px 0 8px 0;
-    border-left: 4px solid #008069;
+    margin: 16px 0 10px 0;
+    border-left: 4px solid #006d59;
     page-break-inside: avoid;
   }
   .tool-header h3 {
-    color: #008069;
+    color: #006d59;
     margin: 0 0 6px 0;
-    font-size: 13px;
+    font-size: 14px;
   }
-  .tool-header div {
+  .tool-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3px;
     font-size: 10px;
   }
+  
   table {
     width: 100%;
     border-collapse: collapse;
@@ -813,7 +856,7 @@ function generatePDF(){
     font-size: 10px;
   }
   table th {
-    background: #008069;
+    background: #006d59;
     color: #fff;
     padding: 6px 4px;
     text-align: left;
@@ -825,21 +868,18 @@ function generatePDF(){
     border: 1px solid #e0e0e0;
     vertical-align: top;
   }
-  table tr:nth-child(even) {
-    background: #f9f9f9;
-  }
-  table tr.fail-row {
-    background: #fef2f2;
-  }
+  table tr:nth-child(even) { background: #f9f9f9; }
+  table tr.fail-row { background: #fef2f2; }
   table img {
-    max-width: 180px;
-    height: 100px;
+    max-width: 160px;
+    height: 90px;
     object-fit: cover;
     border: 1px solid #ddd;
     border-radius: 3px;
     margin-top: 3px;
     display: block;
   }
+  
   .failed-summary {
     background: #fef2f2;
     border: 1px solid #fecaca;
@@ -853,69 +893,92 @@ function generatePDF(){
     margin: 0 0 8px 0;
     font-size: 13px;
   }
-  .failed-table th {
-    background: #ea4335;
-  }
+  .failed-summary table th { background: #ea4335; }
+  
   .signature-section {
     margin-top: 20px;
     page-break-inside: avoid;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
   }
   .signature-section h2 {
     font-size: 13px;
-    color: #008069;
+    color: #006d59;
     margin: 0 0 8px 0;
   }
-  .signature-section img {
-    max-width: 200px;
+  .sig-img {
+    max-width: 180px;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 8px;
     background: #fff;
   }
-  .footer-note {
-    margin-top: 20px;
-    font-size: 9px;
-    color: #999;
-    text-align: center;
-    border-top: 1px solid #eee;
-    padding-top: 8px;
+  .sig-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: #666;
   }
+  
+  .footer-note {
+    margin-top: 16px;
+    font-size: 9px;
+    color: #888;
+    text-align: center;
+    font-style: italic;
+  }
+  
   @media print {
     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pdf-header, .pdf-footer { position: fixed !important; }
     table { page-break-inside: auto; }
     tr { page-break-inside: avoid; page-break-after: auto; }
     .tool-header { page-break-inside: avoid; }
     .failed-summary { page-break-inside: avoid; }
+    .signature-section { page-break-inside: avoid; }
   }
 </style>
 </head>
 <body>
-  <div class="report-header">
+  <div class="pdf-header">
     ${logoHtml}
-    <h1>PUWER Inspection Report</h1>
-    <div class="subtitle">Provision and Use of Work Equipment Regulations 1998</div>
+    <div class="header-center">
+      <h1>PUWER Inspection Report</h1>
+      <p class="subtitle">Provision and Use of Work Equipment Regulations 1998</p>
+    </div>
+    <div class="header-right">
+      <div class="rcp-name">${state.setup.rcp}</div>
+      <div class="date">${state.setup.date}</div>
+    </div>
   </div>
   
-  <div class="meta-grid">
-    <span><strong>Company:</strong> ${state.setup.company}</span>
-    <span><strong>Project:</strong> ${state.setup.project}</span>
-    <span><strong>Reference:</strong> ${state.setup.ref||'—'}</span>
-    <span><strong>Date:</strong> ${state.setup.date}</span>
-    <span><strong>RCP Name:</strong> ${state.setup.rcp}</span>
-    <span><strong>RCP Role:</strong> ${state.setup.rcpRole}</span>
-    <span><strong>Total Tools Inspected:</strong> ${state.allInspections.length}</span>
-    <span><strong>Report Generated:</strong> ${new Date().toLocaleString()}</span>
+  <div class="content">
+    <div class="meta-grid">
+      <span><strong>Company:</strong> ${state.setup.company}</span>
+      <span><strong>Project:</strong> ${state.setup.project}</span>
+      <span><strong>Reference:</strong> ${state.setup.ref||'—'}</span>
+      <span><strong>Date:</strong> ${state.setup.date}</span>
+      <span><strong>RCP Name:</strong> ${state.setup.rcp}</span>
+      <span><strong>RCP Role:</strong> ${state.setup.rcpRole}</span>
+      <span><strong>Total Tools Inspected:</strong> ${state.allInspections.length}</span>
+      <span><strong>Report Generated:</strong> ${new Date().toLocaleString()}</span>
+    </div>
+    
+    ${allToolSections}
+    
+    ${failedSummaryHTML}
+    
+    ${sigHtml}
+    
+    <div class="footer-note">
+      This report was generated by the PUWER Inspection App. All inspections were carried out by the Responsible Competent Person named above. Failed items must be addressed before equipment is returned to service.
+    </div>
   </div>
   
-  ${allToolSections}
-  
-  ${failedSummaryHTML}
-  
-  ${sigHtml}
-  
-  <div class="footer-note">
-    This report was generated by the PUWER Inspection App. All inspections were carried out by the Responsible Competent Person named above. 
-    Failed items must be addressed before equipment is returned to service.
+  <div class="pdf-footer">
+    <span>PUWER Inspection Report - ${state.setup.company} - ${state.setup.project} - Ref: PUWER-${state.setup.ref||'N/A'}-${state.setup.date}</span>
+    <span>Page 1 of 1</span>
   </div>
 </body>
 </html>`;
