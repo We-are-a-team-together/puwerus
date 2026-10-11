@@ -208,16 +208,19 @@ function showSetup(){
     <div class="msg msg-in">
       <div class="msg-label">Site & Responsible Competent Person Setup</div>
       <p style="margin-bottom:16px;color:var(--wa-text-dim);font-size:13px">Enter your company, project and Responsible Competent Person details.</p>
-      <div class="form-group"><label>Company Name (your employer)</label><input type="text" id="setupCompany" placeholder="e.g. ABC Construction Ltd" value="<LaTex>id_1</LaTex>{state.setup?.project||''}"></div>
+      <div class="form-group"><label>Company Name (your employer)</label><input type="text" id="setupCompany" placeholder="e.g. ABC Construction Ltd" value="${state.setup?.company||''}"></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="setupProject" placeholder="e.g. Riverside Development" value="${state.setup?.project||''}"></div>
       <div class="form-row">
-        <div class="form-group"><label>Project Reference</label><input type="text" id="setupRef" placeholder="e.g. PRJ-2025-001" value="<LaTex>id_2</LaTex>{state.setup?.date||new Date().toISOString().split('T')[0]}"></div>
+        <div class="form-group"><label>Project Reference</label><input type="text" id="setupRef" placeholder="e.g. PRJ-2025-001" value="${state.setup?.ref||''}"></div>
+        <div class="form-group"><label>Inspection Date</label><input type="date" id="setupDate" value="${state.setup?.date||new Date().toISOString().split('T')[0]}"></div>
       </div>
-      <div class="form-group"><label>Responsible Competent Person Name</label><input type="text" id="setupRCP" placeholder="Full name" value="<LaTex>id_3</LaTex>{state.setup?.rcpRole||''}"></div>
+      <div class="form-group"><label>Responsible Competent Person Name</label><input type="text" id="setupRCP" placeholder="Full name" value="${state.setup?.rcp||''}"></div>
+      <div class="form-group"><label>Responsible Competent Person Role / Position</label><input type="text" id="setupRCPRole" placeholder="e.g. Site Supervisor" value="${state.setup?.rcpRole||''}"></div>
       <div class="form-group">
         <label>Company Logo (optional - will appear on PDF)</label>
         <input type="file" id="setupLogo" accept="image/*" style="font-size:13px;color:var(--wa-text-dim)" onchange="handleLogoUpload(event)">
         <div class="logo-preview" id="logoPreview">
-          <LaTex>id_4</LaTex>{state.setup.logo}" alt="Logo">` : ''}
+          ${state.setup?.logo ? `<img src="${state.setup.logo}" alt="Logo">` : ''}
         </div>
       </div>
       <button class="btn-primary" style="margin-top:10px" onclick="saveSetup()">Save & Start Inspection</button>
@@ -234,27 +237,85 @@ function handleLogoUpload(e){
     if(!state.setup) state.setup = {};
     state.setup.logo = dataUrl;
     const preview = document.getElementById('logoPreview');
-    if(preview) preview.innerHTML = `<img src="<LaTex>id_5</LaTex>{state.allInspections.length + 1} — Choose Owner`;
+    if(preview) preview.innerHTML = `<img src="${dataUrl}" alt="Logo">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveSetup(){
+  const company = document.getElementById('setupCompany').value.trim();
+  const project = document.getElementById('setupProject').value.trim();
+  const ref = document.getElementById('setupRef').value.trim();
+  const date = document.getElementById('setupDate').value;
+  const rcp = document.getElementById('setupRCP').value.trim();
+  const rcpRole = document.getElementById('setupRCPRole').value.trim();
+  if(!company || !project || !rcp){ alert('Please fill in Company, Project, and RCP Name.'); return; }
+  state.setup = {...state.setup, company, project, ref, date, rcp, rcpRole};
+  state.phase = 'tool';
+  if(!state.allInspections) state.allInspections = [];
+  if(!state.toolCount) state.toolCount = 0;
+  saveState();
+  startToolIdentification();
+}
+
+function startToolIdentification(){
+  state.currentStep = 1;
+  document.getElementById('headerSub').textContent = `Tool ${state.allInspections.length + 1} — Choose Owner`;
   document.getElementById('progressFill').style.width = '10%';
   setChat(`
-    <div class="msg msg-system">PUWER Inspection — <LaTex>id_6</LaTex>{state.allInspections.length + 1}</div>
+    <div class="msg msg-system">PUWER Inspection — ${state.setup.date} | Tool ${state.allInspections.length + 1}</div>
     <div class="msg msg-in">
       <div class="msg-label">Step 1 of 3: Tool Owner / Subcontractor</div>
       <p style="margin-bottom:12px;color:var(--wa-text-dim);font-size:13px">Who is the <strong>owner</strong> of the tool you are about to inspect?</p>
       <div class="form-group" style="margin:0">
-        <input type="text" id="ownerInput" placeholder="e.g. Smith Groundworks Ltd" style="width:100%" value="<LaTex>id_7</LaTex>{state.allInspections.length + 1} — Identify Tool`;
+        <input type="text" id="ownerInput" placeholder="e.g. Smith Groundworks Ltd" style="width:100%" value="${state.owner||''}">
+      </div>
+      <div class="options-row" style="margin-top:8px">
+        <button class="opt-btn" onclick="setOwner('Self / Direct Labour')">Self / Direct Labour</button>
+        <button class="opt-btn" onclick="setOwner('Plant Hire')">Plant Hire</button>
+      </div>
+      <button class="btn-primary" style="margin-top:12px" onclick="confirmOwner()">Confirm Owner ➤</button>
+    </div>
+  `);
+}
+
+function setOwner(val){ document.getElementById('ownerInput').value = val; }
+
+function confirmOwner(){
+  const owner = document.getElementById('ownerInput').value.trim();
+  if(!owner){ alert('Please enter the tool owner / subcontractor name.'); return; }
+  state.owner = owner;
+  saveState();
+  askToolDetails();
+}
+
+function askToolDetails(){
+  state.currentStep = 2;
+  document.getElementById('headerSub').textContent = `Tool ${state.allInspections.length + 1} — Identify Tool`;
   document.getElementById('progressFill').style.width = '20%';
   setChat(`
-    <div class="msg msg-system">PUWER Inspection — <LaTex>id_8</LaTex>{state.allInspections.length + 1}</div>
+    <div class="msg msg-system">PUWER Inspection — ${state.setup.date} | Tool ${state.allInspections.length + 1}</div>
     <div class="msg msg-in">
       <div class="msg-label">Step 2 of 3: Identify the Tool</div>
       <p style="margin-bottom:12px;color:var(--wa-text-dim);font-size:13px">Please provide details of the equipment being inspected.</p>
-      <div class="form-group"><label>Tool / Equipment Name</label><input type="text" id="toolName" placeholder="e.g. Bosch GBH 2-26 DRE" value="<LaTex>id_9</LaTex>{state.toolInfo?.category==='Hand Tool (non-powered)'?'selected':''}>Hand Tool (non-powered)</option>
-            <option value="Power Tool - Corded" <LaTex>id_10</LaTex>{state.toolInfo?.category==='Power Tool - Cordless'?'selected':''}>Power Tool - Cordless</option>
-            <option value="Power Tool - Petrol/Diesel" <LaTex>id_11</LaTex>{state.toolInfo?.category==='Power Tool - Pneumatic'?'selected':''}>Power Tool - Pneumatic</option>
-            <option value="Power Tool - Hydraulic" <LaTex>id_12</LaTex>{state.toolInfo?.category==='Fixed Machinery'?'selected':''}>Fixed Machinery</option>
-            <option value="Access Equipment" <LaTex>id_13</LaTex>{state.toolInfo?.category==='Lifting Equipment'?'selected':''}>Lifting Equipment</option>
-            <option value="Other" <LaTex>id_14</LaTex>{state.toolInfo?.serial||''}"></div>
+      <div class="form-group"><label>Tool / Equipment Name</label><input type="text" id="toolName" placeholder="e.g. Bosch GBH 2-26 DRE" value="${state.toolInfo?.name||''}"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Category</label>
+          <select id="toolCategory" onchange="handleCategoryChange()">
+            <option value="">Select...</option>
+            <option value="Hand Tool (non-powered)" ${state.toolInfo?.category==='Hand Tool (non-powered)'?'selected':''}>Hand Tool (non-powered)</option>
+            <option value="Power Tool - Corded" ${state.toolInfo?.category==='Power Tool - Corded'?'selected':''}>Power Tool - Corded</option>
+            <option value="Power Tool - Cordless" ${state.toolInfo?.category==='Power Tool - Cordless'?'selected':''}>Power Tool - Cordless</option>
+            <option value="Power Tool - Petrol/Diesel" ${state.toolInfo?.category==='Power Tool - Petrol/Diesel'?'selected':''}>Power Tool - Petrol/Diesel</option>
+            <option value="Power Tool - Pneumatic" ${state.toolInfo?.category==='Power Tool - Pneumatic'?'selected':''}>Power Tool - Pneumatic</option>
+            <option value="Power Tool - Hydraulic" ${state.toolInfo?.category==='Power Tool - Hydraulic'?'selected':''}>Power Tool - Hydraulic</option>
+            <option value="Fixed Machinery" ${state.toolInfo?.category==='Fixed Machinery'?'selected':''}>Fixed Machinery</option>
+            <option value="Access Equipment" ${state.toolInfo?.category==='Access Equipment'?'selected':''}>Access Equipment</option>
+            <option value="Lifting Equipment" ${state.toolInfo?.category==='Lifting Equipment'?'selected':''}>Lifting Equipment</option>
+            <option value="Other" ${state.toolInfo?.category==='Other'?'selected':''}>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Asset / Serial No.</label><input type="text" id="toolSerial" placeholder="Optional" value="${state.toolInfo?.serial||''}"></div>
       </div>
       <div class="form-group"><label>Location on Site</label><input type="text" id="toolLocation" placeholder="e.g. Level 2, Zone B" value="${state.toolInfo?.location||''}"></div>
       <button class="btn-primary" onclick="confirmTool()">Next ➤</button>
@@ -270,4 +331,735 @@ function handleCategoryChange(){
 function confirmTool(){
   const name = document.getElementById('toolName').value.trim();
   const category = document.getElementById('toolCategory').value;
-  const serial = document.getElementById('toolSerial').
+  const serial = document.getElementById('toolSerial').value.trim();
+  const location = document.getElementById('toolLocation').value.trim();
+  if(!name || !category){ alert('Please enter tool name and select a category.'); return; }
+  state.toolInfo = {name, category, serial, location};
+  
+  if(category === 'Hand Tool (non-powered)'){
+    state.hasPower = false;
+    state.powerSource = 'None (non-powered)';
+    state.phase = 'questions';
+    saveState();
+    setTimeout(()=> startQuestions(), 500);
+  } else {
+    state.phase = 'power';
+    saveState();
+    askPowerSource();
+  }
+}
+
+function askPowerSource(){
+  state.currentStep = 3;
+  document.getElementById('headerSub').textContent = `Tool ${state.allInspections.length + 1} — Power Source`;
+  document.getElementById('progressFill').style.width = '30%';
+  setChat(`
+    <div class="msg msg-system">PUWER Inspection — ${state.setup.date} | Tool ${state.allInspections.length + 1}</div>
+    <div class="msg msg-in">
+      <div class="msg-label">Step 3 of 3: Power Source</div>
+      <p style="margin-bottom:12px;color:var(--wa-text-dim);font-size:13px">Does <strong>${state.toolInfo.name}</strong> require a power source to operate?</p>
+      <div class="options-row" style="flex-direction:column;align-items:stretch">
+        <button class="opt-btn" onclick="setPower(true)" style="padding:14px;font-size:14px">⚡ Yes, it needs power</button>
+        <button class="opt-btn na" onclick="setPower(false)" style="padding:14px;font-size:14px">🚫 No power required</button>
+      </div>
+    </div>
+  `);
+}
+
+function setPower(hasPower){
+  state.hasPower = hasPower;
+  if(!hasPower){
+    state.powerSource = 'None (non-powered)';
+    state.phase = 'questions';
+    saveState();
+    setTimeout(()=> startQuestions(), 500);
+  } else {
+    showPowerTypeSelection();
+  }
+}
+
+function showPowerTypeSelection(){
+  setChat(`
+    <div class="msg msg-system">PUWER Inspection — ${state.setup.date} | Tool ${state.allInspections.length + 1}</div>
+    <div class="msg msg-in">
+      <div class="msg-label">Power Source Type</div>
+      <p style="margin-bottom:12px;color:var(--wa-text-dim);font-size:13px">What type of power source does <strong>${state.toolInfo.name}</strong> use?</p>
+      <div class="options-row" style="flex-direction:column;align-items:stretch">
+        <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (18V)')">🔋 Battery / Cordless (18V)</button>
+        <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (36V / 40V / 54V)')">🔋 Battery / Cordless (36V+)</button>
+        <button class="opt-btn" onclick="selectPowerType('110V Mains (Site)')">🔌 110V Mains (Site)</button>
+        <button class="opt-btn" onclick="selectPowerType('240V Mains (Domestic)')">🔌 240V Mains (Domestic)</button>
+        <button class="opt-btn" onclick="selectPowerType('400V / 3-Phase')"> 400V / 3-Phase</button>
+        <button class="opt-btn" onclick="selectPowerType('Petrol')">⛽ Petrol</button>
+        <button class="opt-btn" onclick="selectPowerType('Diesel')"> Diesel</button>
+        <button class="opt-btn" onclick="selectPowerType('Pneumatic / Compressed Air')">💨 Pneumatic / Compressed Air</button>
+        <button class="opt-btn" onclick="selectPowerType('Hydraulic')">🔧 Hydraulic</button>
+      </div>
+    </div>
+  `);
+}
+
+function selectPowerType(type){
+  state.powerSource = type;
+  state.phase = 'questions';
+  saveState();
+  setTimeout(()=> startQuestions(), 500);
+}
+
+function getFilteredQuestions(){
+  return puwerQuestions.filter(q => {
+    if(!q.requiresPower) return true;
+    if(!state.hasPower) return false;
+    if(q.powerTypes && q.powerTypes.length > 0){
+      return q.powerTypes.some(pt => state.powerSource.toLowerCase().includes(pt.toLowerCase()));
+    }
+    return true;
+  });
+}
+
+function startQuestions(){
+  state.currentQ = 0;
+  state.answers = [];
+  state.photos = {};
+  document.getElementById('headerSub').textContent = `Inspecting: ${state.toolInfo.name}`;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const questions = getFilteredQuestions();
+  if(state.currentQ >= questions.length){ showToolCompleteOptions(); return; }
+  const q = questions[state.currentQ];
+  const total = questions.length;
+  const pct = 30 + ((state.currentQ / total) * 60);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('headerSub').textContent = `Q${state.currentQ+1}/${total} — ${state.toolInfo.name}`;
+  
+  const hasExistingPhoto = state.photos && state.photos[q.id];
+  
+  setChat(`
+    <div class="msg msg-system">Question ${state.currentQ+1} of ${total} — ${q.category}</div>
+    <div class="msg msg-in">
+      <div class="q-card" style="margin:0;border:none;box-shadow:none;padding:0">
+        <div class="q-card-header">
+          <span class="q-number">${q.category}</span>
+          <span class="q-status" id="qStatus">Pending</span>
+        </div>
+        <div class="q-text">${q.text}</div>
+        ${q.requiresPower && state.hasPower ? `<div style="font-size:11px;color:var(--wa-blue);margin-bottom:8px">⚡ Power-related: ${state.powerSource}</div>` : ''}
+        <div class="options-row">
+          <button class="opt-btn" id="btnPass" onclick="answerQ('Pass')">✓ Pass</button>
+          <button class="opt-btn danger" id="btnFail" onclick="answerQ('Fail')">✗ Fail</button>
+          <button class="opt-btn na" id="btnNA" onclick="answerQ('N/A')">— N/A</button>
+        </div>
+        <div class="photo-section">
+          <button class="photo-btn" onclick="openPhoto(${q.id})"> Add Photo Evidence</button>
+          <div class="photo-note">📐 Please use landscape orientation for clarity</div>
+          <div id="photoPreview_${q.id}">
+            ${hasExistingPhoto ? `<div class="photo-preview"><img src="${state.photos[q.id]}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${q.id})"></button></div>` : ''}
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:8px">
+          <label>Comments / Observations (optional)</label>
+          <textarea id="qComment" rows="2" placeholder="Add any notes...">${state.answers.find(a=>a.qId===q.id)?.comment || ''}</textarea>
+        </div>
+        <button class="btn-primary" style="margin-top:8px" onclick="nextQuestion()">Next Question ➤</button>
+      </div>
+    </div>
+  `);
+}
+
+function answerQ(val){
+  document.getElementById('qStatus').textContent = val;
+  document.getElementById('qStatus').className = 'q-status ' + (val==='Pass'?'pass':val==='Fail'?'fail':'na-status');
+  document.querySelectorAll('.q-card .opt-btn').forEach(b=>b.classList.remove('active'));
+  if(val==='Pass') document.getElementById('btnPass').classList.add('active');
+  if(val==='Fail') document.getElementById('btnFail').classList.add('active');
+  if(val==='N/A') document.getElementById('btnNA').classList.add('active');
+  
+  const questions = getFilteredQuestions();
+  const q = questions[state.currentQ];
+  const existing = state.answers.find(a=>a.qId===q.id);
+  if(existing){ existing.answer = val; existing.comment = document.getElementById('qComment').value; } 
+  else { state.answers.push({qId:q.id, answer:val, comment:''}); }
+}
+
+function nextQuestion(){
+  const questions = getFilteredQuestions();
+  const q = questions[state.currentQ];
+  const existing = state.answers.find(a=>a.qId===q.id);
+  if(!existing || !existing.answer){ alert('Please select Pass, Fail, or N/A before continuing.'); return; }
+  existing.comment = document.getElementById('qComment').value;
+  state.currentQ++;
+  saveState();
+  renderQuestion();
+}
+
+function showToolCompleteOptions(){
+  const questions = getFilteredQuestions();
+  document.getElementById('progressFill').style.width = '95%';
+  document.getElementById('headerSub').textContent = `Tool Complete — ${state.toolInfo.name}`;
+  
+  let passCount = state.answers.filter(a=>a.answer==='Pass').length;
+  let failCount = state.answers.filter(a=>a.answer==='Fail').length;
+  let naCount = state.answers.filter(a=>a.answer==='N/A').length;
+  
+  setChat(`
+    <div class="msg msg-system">Tool Inspection Complete</div>
+    <div class="msg msg-in">
+      <div class="msg-label">Inspection Summary: ${state.toolInfo.name}</div>
+      <div class="report-section">
+        <div class="report-item"><span>Owner / Subcontractor</span><span class="sub-tag">${state.owner}</span></div>
+        <div class="report-item"><span>Category</span><span>${state.toolInfo.category}</span></div>
+        <div class="report-item"><span>Power Source</span><span>${state.powerSource}</span></div>
+        <div class="report-item"><span>Serial No.</span><span>${state.toolInfo.serial || '—'}</span></div>
+        <div class="report-item"><span>Location</span><span>${state.toolInfo.location || '—'}</span></div>
+      </div>
+      <div class="report-section">
+        <h4>Results (${questions.length} questions)</h4>
+        <div class="report-item"><span style="color:var(--wa-green)">✓ Pass</span><span>${passCount}</span></div>
+        <div class="report-item"><span style="color:var(--wa-red)">✗ Fail</span><span>${failCount}</span></div>
+        <div class="report-item"><span style="color:var(--wa-text-dim)">— N/A</span><span>${naCount}</span></div>
+      </div>
+      ${failCount > 0 ? `<div class="report-section"><h4>⚠️ Failed Items</h4>${state.answers.filter(a=>a.answer==='Fail').map(a=>{const q=questions.find(qq=>qq.id===a.qId);return `<div class="report-item"><span style="color:var(--wa-red);font-size:12px">${q?q.text.substring(0,50)+'...':'Item'}</span></div>`;}).join('')}</div>` : ''}
+      <div class="msg-label" style="margin-top:12px">What would you like to do next?</div>
+      <button class="btn-primary" style="margin-top:8px" onclick="addAnotherTool()">➕ Add Another Tool</button>
+      <button class="btn-secondary" style="margin-top:8px" onclick="generateReport()">📄 Generate Final Report & Sign</button>
+    </div>
+  `);
+}
+
+function addAnotherTool(){
+  state.allInspections.push({
+    toolInfo: {...state.toolInfo},
+    owner: state.owner,
+    powerSource: state.powerSource,
+    hasPower: state.hasPower,
+    answers: [...state.answers],
+    photos: {...state.photos}
+  });
+  state.toolCount = state.allInspections.length;
+  
+  state.toolInfo = null;
+  state.owner = '';
+  state.powerSource = null;
+  state.hasPower = null;
+  state.answers = [];
+  state.currentQ = 0;
+  state.photos = {};
+  state.phase = 'tool';
+  saveState();
+  
+  startToolIdentification();
+}
+
+function generateReport(){
+  state.allInspections.push({
+    toolInfo: {...state.toolInfo},
+    owner: state.owner,
+    powerSource: state.powerSource,
+    hasPower: state.hasPower,
+    answers: [...state.answers],
+    photos: {...state.photos}
+  });
+  state.toolCount = state.allInspections.length;
+  state.phase = 'signature';
+  saveState();
+  openSig();
+}
+
+function openSig(){
+  document.getElementById('sigModal').classList.add('active');
+  const canvas = document.getElementById('sigCanvas');
+  sigCtx = canvas.getContext('2d');
+  sigCtx.fillStyle = '#fff';
+  sigCtx.fillRect(0,0,canvas.width,canvas.height);
+  sigCtx.strokeStyle = '#000';
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round';
+  canvas.addEventListener('mousedown', sigStart);
+  canvas.addEventListener('mousemove', sigMove);
+  canvas.addEventListener('mouseup', sigEnd);
+  canvas.addEventListener('touchstart', sigTouchStart, {passive:false});
+  canvas.addEventListener('touchmove', sigTouchMove, {passive:false});
+  canvas.addEventListener('touchend', sigEnd);
+}
+
+function sigStart(e){ isDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); }
+function sigMove(e){ if(!isDrawing) return; sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); }
+function sigEnd(){ isDrawing=false; }
+function sigTouchStart(e){ e.preventDefault(); const t=e.touches[0]; const r=e.target.getBoundingClientRect(); isDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(t.clientX-r.left, t.clientY-r.top); }
+function sigTouchMove(e){ e.preventDefault(); if(!isDrawing) return; const t=e.touches[0]; const r=e.target.getBoundingClientRect(); sigCtx.lineTo(t.clientX-r.left, t.clientY-r.top); sigCtx.stroke(); }
+function clearSig(){ sigCtx.fillStyle='#fff'; sigCtx.fillRect(0,0,360,150); }
+function closeSig(){ document.getElementById('sigModal').classList.remove('active'); }
+
+function confirmSig(){
+  const canvas = document.getElementById('sigCanvas');
+  state.signature = canvas.toDataURL();
+  state.phase = 'done';
+  saveState();
+  closeSig();
+  generatePDF();
+}
+
+function openPhoto(qId){
+  currentPhotoTarget = qId;
+  document.getElementById('photoModal').classList.add('active');
+  document.getElementById('photoInput').value = '';
+}
+
+function closePhotoModal(){
+  document.getElementById('photoModal').classList.remove('active');
+  currentPhotoTarget = null;
+}
+
+function handlePhoto(e){
+  const file = e.target.files[0];
+  if(!file || !currentPhotoTarget) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result;
+    if(!state.photos) state.photos = {};
+    state.photos[currentPhotoTarget] = dataUrl;
+    const previewDiv = document.getElementById('photoPreview_' + currentPhotoTarget);
+    if(previewDiv){
+      previewDiv.innerHTML = `<div class="photo-preview"><img src="${dataUrl}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${currentPhotoTarget})">✕</button></div>`;
+    }
+    closePhotoModal();
+    saveState();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removePhoto(qId){
+  if(state.photos) delete state.photos[qId];
+  const previewDiv = document.getElementById('photoPreview_' + qId);
+  if(previewDiv) previewDiv.innerHTML = '';
+  saveState();
+}
+
+function generatePDF(){
+  let allToolSections = '';
+  let allFailedItems = [];
+  let globalRowNum = 0;
+  
+  state.allInspections.forEach((inspection, idx) => {
+    const inspQuestions = puwerQuestions.filter(q => {
+      if(!q.requiresPower) return true;
+      if(!inspection.hasPower) return false;
+      if(q.powerTypes && q.powerTypes.length > 0){
+        return q.powerTypes.some(pt => inspection.powerSource.toLowerCase().includes(pt.toLowerCase()));
+      }
+      return true;
+    });
+    
+    allToolSections += `
+      <div class="tool-header">
+        <h3>Tool ${idx+1}: ${inspection.toolInfo.name}</h3>
+        <div class="tool-meta">
+          <div><strong>Owner:</strong> ${inspection.owner}</div>
+          <div><strong>Category:</strong> ${inspection.toolInfo.category}</div>
+          <div><strong>Serial No:</strong> ${inspection.toolInfo.serial || '—'}</div>
+          <div><strong>Power Source:</strong> ${inspection.powerSource}</div>
+          <div><strong>Location:</strong> ${inspection.toolInfo.location || '—'}</div>
+          <div><strong>Questions:</strong> ${inspQuestions.length}</div>
+        </div>
+      </div>
+    `;
+    
+    allToolSections += `<table class="inspection-table"><thead><tr><th>#</th><th>Category</th><th>Question</th><th>Result</th><th>Comments</th></tr></thead><tbody>`;
+    
+    inspection.answers.forEach(a=>{
+      const q = inspQuestions.find(qq=>qq.id===a.qId);
+      if(!q) return;
+      globalRowNum++;
+      const color = a.answer==='Pass'?'#006d59':a.answer==='Fail'?'#ea4335':'#667781';
+      const photoHtml = inspection.photos && inspection.photos[q.id] 
+        ? `<br><img src="${inspection.photos[q.id]}" style="max-width:160px;height:90px;object-fit:cover;border:1px solid #ddd;border-radius:3px;margin-top:3px">` 
+        : '';
+      allToolSections += `<tr class="${a.answer==='Fail'?'fail-row':''}">
+        <td>${globalRowNum}</td>
+        <td>${q.category}</td>
+        <td>${q.text}${photoHtml}</td>
+        <td style="color:${color};font-weight:700">${a.answer}</td>
+        <td>${a.comment||''}</td>
+      </tr>`;
+      
+      if(a.answer === 'Fail'){
+        allFailedItems.push({
+          toolNum: idx+1,
+          owner: inspection.owner,
+          toolName: inspection.toolInfo.name,
+          question: q.text,
+          comment: a.comment
+        });
+      }
+    });
+    
+    allToolSections += `</tbody></table>`;
+  });
+  
+  let failedSummaryHTML = '';
+  if(allFailedItems.length > 0){
+    failedSummaryHTML = `
+      <div class="failed-summary">
+        <h2>⚠️ Failed Items Summary (${allFailedItems.length} issue${allFailedItems.length>1?'s':''})</h2>
+        <table class="inspection-table">
+          <thead><tr><th>#</th><th>Owner</th><th>Tool</th><th>Failed Check</th><th>Comments</th></tr></thead>
+          <tbody>
+            ${allFailedItems.map((item, i) => `
+              <tr>
+                <td>${i+1}</td>
+                <td>${item.owner}</td>
+                <td>${item.toolName}</td>
+                <td style="color:#ea4335">${item.question.substring(0,70)}${item.question.length>70?'...':''}</td>
+                <td>${item.comment||'—'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+  
+  const logoHtml = state.setup.logo ? `<img src="${state.setup.logo}" class="header-logo">` : '';
+  const sigHtml = state.signature ? `<div class="signature-section"><h2>RCP Signature</h2><img src="${state.signature}" class="sig-img"><div class="sig-info"><span>${state.setup.rcp} - ${state.setup.rcpRole}</span><span>Signed: ${new Date().toLocaleString()}</span></div></div>` : '';
+  
+  // THE FIX: Using a table layout with thead/tfoot for repeating headers/footers
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PUWER Inspection Report</title>
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #111;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* TABLE LAYOUT FOR REPEATING HEADER/FOOTER */
+  .layout-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .layout-table thead { display: table-header-group; }
+  .layout-table tfoot { display: table-footer-group; }
+  
+  .header-cell {
+    background: #006d59;
+    color: #fff;
+    padding: 12px 20px;
+    height: 70px;
+    vertical-align: middle;
+  }
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-logo {
+    max-height: 50px;
+    max-width: 120px;
+    background: #fff;
+    padding: 4px;
+    border-radius: 4px;
+  }
+  .header-center {
+    text-align: center;
+    flex: 1;
+    margin: 0 20px;
+  }
+  .header-center h1 {
+    font-size: 18px;
+    margin: 0 0 4px 0;
+    color: #fff;
+    font-weight: 700;
+  }
+  .header-center .subtitle {
+    font-size: 10px;
+    color: rgba(255,255,255,0.85);
+    margin: 0;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 10px;
+    min-width: 140px;
+  }
+  .header-right .rcp-name {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .header-right .date {
+    font-size: 10px;
+    color: rgba(255,255,255,0.9);
+  }
+  
+  .footer-cell {
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 6px 20px;
+    font-size: 9px;
+    color: #666;
+    height: 30px;
+    vertical-align: middle;
+  }
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .content-cell {
+    padding: 15px 20px;
+    vertical-align: top;
+  }
+  
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 0 0 16px 0;
+    font-size: 11px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #006d59;
+  }
+  .meta-grid span { padding: 3px 0; }
+  .meta-grid strong { color: #333; }
+  
+  .tool-header {
+    background: #f0f7f4;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 16px 0 10px 0;
+    border-left: 4px solid #006d59;
+    page-break-inside: avoid;
+  }
+  .tool-header h3 {
+    color: #006d59;
+    margin: 0 0 6px 0;
+    font-size: 14px;
+  }
+  .tool-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    font-size: 10px;
+  }
+  
+  .inspection-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 10px;
+  }
+  .inspection-table th {
+    background: #006d59;
+    color: #fff;
+    padding: 6px 4px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .inspection-table td {
+    padding: 5px 4px;
+    border: 1px solid #e0e0e0;
+    vertical-align: top;
+  }
+  .inspection-table tr:nth-child(even) { background: #f9f9f9; }
+  .inspection-table tr.fail-row { background: #fef2f2; }
+  .inspection-table img {
+    max-width: 160px;
+    height: 90px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-top: 3px;
+    display: block;
+  }
+  
+  .failed-summary {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 16px 0;
+    page-break-inside: avoid;
+  }
+  .failed-summary h2 {
+    color: #ea4335;
+    margin: 0 0 8px 0;
+    font-size: 13px;
+  }
+  .failed-summary table th { background: #ea4335; }
+  
+  .signature-section {
+    margin-top: 20px;
+    page-break-inside: avoid;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+  }
+  .signature-section h2 {
+    font-size: 13px;
+    color: #006d59;
+    margin: 0 0 8px 0;
+  }
+  .sig-img {
+    max-width: 180px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    background: #fff;
+  }
+  .sig-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: #666;
+  }
+  
+  .footer-note {
+    margin-top: 16px;
+    font-size: 9px;
+    color: #888;
+    text-align: center;
+    font-style: italic;
+  }
+  
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .layout-table { width: 100%; }
+    .inspection-table { page-break-inside: auto; }
+    .inspection-table tr { page-break-inside: avoid; page-break-after: auto; }
+    .tool-header { page-break-inside: avoid; }
+    .failed-summary { page-break-inside: avoid; }
+    .signature-section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <table class="layout-table">
+    <thead>
+      <tr>
+        <th class="header-cell">
+          <div class="header-content">
+            ${logoHtml}
+            <div class="header-center">
+              <h1>PUWER Inspection Report</h1>
+              <p class="subtitle">Provision and Use of Work Equipment Regulations 1998</p>
+            </div>
+            <div class="header-right">
+              <div class="rcp-name">${state.setup.rcp}</div>
+              <div class="date">${state.setup.date}</div>
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <td class="footer-cell">
+          <div class="footer-content">
+            <span>PUWER Inspection Report - ${state.setup.company} - ${state.setup.project} - Ref: PUWER-${state.setup.ref||'N/A'}-${state.setup.date}</span>
+            <span>Page 1</span>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+    <tbody>
+      <tr>
+        <td class="content-cell">
+          <div class="meta-grid">
+            <span><strong>Company:</strong> ${state.setup.company}</span>
+            <span><strong>Project:</strong> ${state.setup.project}</span>
+            <span><strong>Reference:</strong> ${state.setup.ref||'—'}</span>
+            <span><strong>Date:</strong> ${state.setup.date}</span>
+            <span><strong>RCP Name:</strong> ${state.setup.rcp}</span>
+            <span><strong>RCP Role:</strong> ${state.setup.rcpRole}</span>
+            <span><strong>Total Tools Inspected:</strong> ${state.allInspections.length}</span>
+            <span><strong>Report Generated:</strong> ${new Date().toLocaleString()}</span>
+          </div>
+          
+          ${allToolSections}
+          
+          ${failedSummaryHTML}
+          
+          ${sigHtml}
+          
+          <div class="footer-note">
+            This report was generated by the PUWER Inspection App. All inspections were carried out by the Responsible Competent Person named above. Failed items must be addressed before equipment is returned to service.
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>`;
+  
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>{ w.print(); }, 800);
+}
+
+function saveState(){ try{ localStorage.setItem('puwer_state', JSON.stringify(state)); }catch(e){} }
+function showMenu(){ document.getElementById('menuModal').classList.add('active'); }
+function closeMenu(){ document.getElementById('menuModal').classList.remove('active'); }
+
+function backupData(){
+  closeMenu();
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `PUWER_${state.setup?.project||'backup'}_${state.setup?.date||'data'}.json`;
+  a.click();
+}
+
+function restoreData(){
+  closeMenu();
+  const input = document.createElement('input');
+  input.type='file'; input.accept='.json';
+  input.onchange = e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{ state=JSON.parse(ev.target.result); saveState(); location.reload(); }
+      catch(err){ alert('Invalid backup file.'); }
+    };
+    r.readAsText(f);
+  };
+  input.click();
+}
+
+function resetSetup(){
+  if(!confirm('Reset all data and start fresh?')) return;
+  localStorage.removeItem('puwer_state');
+  location.reload();
+}
+
+function resumeInspection(){
+  if(state.phase==='questions') renderQuestion();
+  else if(state.phase==='tool') startToolIdentification();
+  else if(state.phase==='power') {
+    if(state.hasPower === null) askPowerSource();
+    else showPowerTypeSelection();
+  }
+  else if(state.phase==='signature') openSig();
+  else if(state.phase==='done') generatePDF();
+  else showSetup();
+}
+
+init();
+</script>
+</body>
+</html>
