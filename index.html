@@ -19,24 +19,18 @@
   --wa-border:#d1d7db;
   --wa-green:#008069;
   --wa-green-hover:#006d59;
-  --wa-green-light:#d9fdd3;
   --wa-red:#ea4335;
-  --wa-orange:#f59e0b;
   --wa-blue:#3b82f6;
   --wa-card-bg:#ffffff;
 }
 body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);color:var(--wa-text-main);min-height:100vh;overflow-x:hidden}
 .app-container{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
-
-/* Header */
 .header{background:var(--wa-header);padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,0.1);position:sticky;top:0;z-index:100}
 .header-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
 .header-info{flex:1}
 .header-title{font-size:16px;font-weight:600;color:var(--wa-header-text)}
 .header-sub{font-size:12px;color:rgba(255,255,255,0.8)}
 .header-btn{background:none;border:none;color:var(--wa-header-text);font-size:20px;cursor:pointer;padding:8px}
-
-/* Chat Area */
 .chat-area{flex:1;padding:12px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background:var(--wa-bg)}
 .msg{max-width:85%;padding:8px 12px;border-radius:8px;font-size:14px;line-height:1.4;position:relative;word-wrap:break-word;box-shadow:0 1px 1px rgba(0,0,0,0.1)}
 .msg-in{background:var(--wa-bubble-in);align-self:flex-start;color:var(--wa-text-main)}
@@ -44,15 +38,6 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 .msg-system{background:rgba(225,245,254,0.9);align-self:center;font-size:12px;color:var(--wa-text-dim);border-radius:8px;padding:6px 14px;text-align:center;box-shadow:none}
 .msg-time{font-size:10px;color:var(--wa-text-dim);text-align:right;margin-top:4px}
 .msg-label{font-size:11px;color:var(--wa-green);font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
-
-/* Input Bar */
-.input-bar{background:var(--wa-input-bar);padding:8px 12px;display:flex;align-items:flex-end;gap:8px;border-top:1px solid var(--wa-border);position:sticky;bottom:0}
-.input-bar textarea{flex:1;background:var(--wa-input-field);border:1px solid var(--wa-border);border-radius:20px;padding:10px 16px;color:var(--wa-text-main);font-size:14px;resize:none;max-height:100px;outline:none;font-family:inherit}
-.input-bar textarea::placeholder{color:var(--wa-text-dim)}
-.send-btn{width:42px;height:42px;border-radius:50%;background:var(--wa-green);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.send-btn:active{background:var(--wa-green-hover)}
-
-/* Buttons / Options */
 .options-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .opt-btn{padding:10px 18px;border-radius:20px;border:1px solid var(--wa-green);background:transparent;color:var(--wa-green);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .opt-btn:hover,.opt-btn.active{background:var(--wa-green);color:#fff}
@@ -60,18 +45,13 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 .opt-btn.danger:hover,.opt-btn.danger.active{background:var(--wa-red);color:#fff}
 .opt-btn.na{border-color:var(--wa-text-dim);color:var(--wa-text-dim)}
 .opt-btn.na:hover,.opt-btn.na.active{background:var(--wa-text-dim);color:#fff}
-
-/* Photo Section */
 .photo-section{margin:8px 0}
-.photo-btns{display:flex;gap:8px;flex-wrap:wrap}
 .photo-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:16px;background:var(--wa-input-bar);border:1px solid var(--wa-border);color:var(--wa-text-dim);font-size:12px;cursor:pointer;transition:all .2s}
 .photo-btn:hover{border-color:var(--wa-green);color:var(--wa-green)}
 .photo-preview{margin-top:8px;position:relative;display:inline-block}
 .photo-preview img{max-width:100%;height:180px;object-fit:cover;border-radius:8px;border:2px solid var(--wa-border)}
 .photo-remove{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--wa-red);color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .photo-note{font-size:10px;color:var(--wa-text-dim);margin-top:4px;font-style:italic}
-
-/* Setup Screen */
 .setup-screen{padding:20px 16px;overflow-y:auto;flex:1}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:13px;color:var(--wa-text-dim);margin-bottom:6px;font-weight:500}
@@ -79,13 +59,9 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--wa-green)}
 .form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23667781' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-/* Signature Canvas */
 .sig-container{background:#fff;border-radius:12px;padding:4px;margin:8px 0;position:relative;border:1px solid var(--wa-border)}
 .sig-container canvas{width:100%;height:150px;border-radius:8px;touch-action:none}
 .sig-clear{position:absolute;top:8px;right:8px;background:var(--wa-red);color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer}
-
-/* Question Card */
 .q-card{background:var(--wa-card-bg);border-radius:12px;padding:14px;margin:6px 0;border:1px solid var(--wa-border);box-shadow:0 1px 2px rgba(0,0,0,0.05)}
 .q-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .q-number{font-size:11px;color:var(--wa-green);font-weight:700;text-transform:uppercase}
@@ -94,44 +70,30 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 .q-status.fail{background:rgba(234,67,53,0.1);color:var(--wa-red)}
 .q-status.na-status{background:rgba(102,119,129,0.1);color:var(--wa-text-dim)}
 .q-text{font-size:14px;color:var(--wa-text-main);margin-bottom:10px;line-height:1.5}
-
-/* Progress Bar */
 .progress-bar{height:3px;background:rgba(0,0,0,0.1);margin:0}
 .progress-fill{height:100%;background:var(--wa-green);transition:width .3s ease}
-
-/* Modal */
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.active{display:flex}
 .modal{background:var(--wa-card-bg);border-radius:16px;padding:24px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;color:var(--wa-text-main)}
 .modal h3{font-size:18px;margin-bottom:16px;color:var(--wa-text-main)}
-
-/* Report Styles */
 .report-section{margin:12px 0;padding:12px;background:var(--wa-input-bar);border-radius:8px;border:1px solid var(--wa-border)}
 .report-section h4{font-size:13px;color:var(--wa-green);margin-bottom:8px}
 .report-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--wa-border);font-size:13px;color:var(--wa-text-main)}
 .report-item:last-child{border-bottom:none}
-
-/* Subcontractor Tag */
 .sub-tag{display:inline-block;background:var(--wa-blue);color:#fff;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:6px;font-weight:600}
-
-/* Animations */
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .msg{animation:fadeIn .3s ease}
-
-/* Scrollbar */
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--wa-border);border-radius:3px}
-
-/* Hidden file input */
 .file-input{display:none}
-
-/* Buttons */
-.btn-primary{background:var(--wa-green);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%}
+.btn-primary{background:var(--wa-green);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;margin-top:8px}
 .btn-primary:hover{background:var(--wa-green-hover)}
-.btn-secondary{background:var(--wa-input-bar);color:var(--wa-text-main);border:1px solid var(--wa-border);border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%}
+.btn-secondary{background:var(--wa-input-bar);color:var(--wa-text-main);border:1px solid var(--wa-border);border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;margin-top:8px}
 .btn-secondary:hover{border-color:var(--wa-green)}
-.btn-danger{background:var(--wa-red);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%}
+.btn-danger{background:var(--wa-red);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;margin-top:8px}
+.logo-preview{margin-top:8px;text-align:center}
+.logo-preview img{max-width:120px;max-height:80px;border-radius:8px;border:1px solid var(--wa-border)}
 </style>
 </head>
 <body>
@@ -146,21 +108,16 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   <div class="chat-area" id="chatArea"></div>
-  <div class="input-bar" id="inputBar" style="display:none">
-    <textarea id="msgInput" rows="1" placeholder="Type a message..." onkeydown="handleKey(event)"></textarea>
-    <button class="send-btn" onclick="sendMsg()">➤</button>
-  </div>
 </div>
 
 <div class="modal-overlay" id="menuModal">
   <div class="modal">
     <h3>⚙️ Menu</h3>
     <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn-primary" onclick="generatePDF()">📄 Generate PDF Report</button>
       <button class="btn-secondary" onclick="backupData()">💾 Backup Data</button>
       <button class="btn-secondary" onclick="restoreData()"> Restore Data</button>
-      <button class="btn-secondary" onclick="resetSetup()">🔄 Reset Setup</button>
-      <button class="btn-danger" onclick="closeMenu()">✕ Close</button>
+      <button class="btn-danger" onclick="resetSetup()">🔄 Reset Setup</button>
+      <button class="btn-secondary" onclick="closeMenu()">✕ Close</button>
     </div>
   </div>
 </div>
@@ -168,13 +125,14 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 <div class="modal-overlay" id="sigModal">
   <div class="modal">
     <h3>✍️ Responsible Competent Person Signature</h3>
+    <p style="font-size:13px;color:var(--wa-text-dim);margin-bottom:12px">Sign below to certify all inspections in this report.</p>
     <div class="sig-container">
       <canvas id="sigCanvas" width="360" height="150"></canvas>
       <button class="sig-clear" onclick="clearSig()">Clear</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:12px">
-      <button class="btn-primary" style="flex:1" onclick="confirmSig()">Confirm Signature</button>
-      <button class="btn-secondary" style="flex:1" onclick="closeSig()">Cancel</button>
+      <button class="btn-primary" style="flex:1;margin-top:0" onclick="confirmSig()">Confirm & Generate PDF</button>
+      <button class="btn-secondary" style="flex:1;margin-top:0" onclick="closeSig()">Cancel</button>
     </div>
   </div>
 </div>
@@ -182,13 +140,11 @@ body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-bg);c
 <div class="modal-overlay" id="photoModal">
   <div class="modal">
     <h3>📷 Add Photo Evidence</h3>
-    <p style="font-size:13px;color:var(--wa-text-dim);margin-bottom:16px">Choose how you want to add the photo. Please take/upload in <strong>landscape orientation</strong> for best results.</p>
-    <input type="file" id="photoCameraInput" accept="image/*" capture="environment" class="file-input" onchange="handlePhoto(event)">
-    <input type="file" id="photoUploadInput" accept="image/*" class="file-input" onchange="handlePhoto(event)">
+    <p style="font-size:13px;color:var(--wa-text-dim);margin-bottom:16px">Select a photo from your device or take a new one. Please use <strong>landscape orientation</strong> for best results.</p>
+    <input type="file" id="photoInput" accept="image/*" class="file-input" onchange="handlePhoto(event)">
     <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn-primary" onclick="document.getElementById('photoCameraInput').click()">📸 Take Photo (Camera)</button>
-      <button class="btn-secondary" onclick="document.getElementById('photoUploadInput').click()">️ Upload from Device</button>
-      <button class="btn-danger" onclick="closePhotoModal()">Cancel</button>
+      <button class="btn-primary" style="margin-top:0" onclick="document.getElementById('photoInput').click()">📷 Select or Take Photo</button>
+      <button class="btn-danger" style="margin-top:0" onclick="closePhotoModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -205,13 +161,15 @@ let state = {
   phase: 'setup',
   photos: {},
   signature: null,
-  inspectionDate: new Date().toISOString()
+  allInspections: [],
+  toolCount: 0
 };
 
 let currentPhotoTarget = null;
 let sigCtx = null;
 let isDrawing = false;
 
+// Exactly 17 questions for powered tools. Non-powered tools will skip Q4-Q11 (8 questions), leaving 9.
 const puwerQuestions = [
   {id:1, text:"Is the equipment suitable for the intended task and work environment?", category:"Suitability", requiresPower:false},
   {id:2, text:"Is the equipment in good working condition with no visible damage, cracks, or excessive wear?", category:"Condition", requiresPower:false},
@@ -229,10 +187,7 @@ const puwerQuestions = [
   {id:14, text:"Are warning labels, safety markings, and operating instructions visible and legible?", category:"Markings", requiresPower:false},
   {id:15, text:"Is the equipment clean and free from contamination (oil, grease, debris, dust buildup)?", category:"Cleanliness", requiresPower:false},
   {id:16, text:"Has the equipment been subject to regular maintenance and servicing as per manufacturer's schedule?", category:"Maintenance", requiresPower:false},
-  {id:17, text:"Is the equipment stored/positioned safely when not in use (no trip hazards, protected from weather)?", category:"Storage", requiresPower:false},
-  {id:18, text:"Are operators/users trained and competent to use this specific equipment?", category:"Training", requiresPower:false},
-  {id:19, text:"Is there adequate lighting in the work area for safe operation of this equipment?", category:"Environment", requiresPower:false},
-  {id:20, text:"Are there any additional defects, hazards, or concerns not covered above?", category:"Additional", requiresPower:false}
+  {id:17, text:"Are there any additional defects, hazards, or concerns not covered above?", category:"Additional", requiresPower:false}
 ];
 
 function init(){
@@ -244,7 +199,6 @@ function init(){
 function showSetup(){
   state.phase = 'setup';
   const chat = document.getElementById('chatArea');
-  document.getElementById('inputBar').style.display = 'none';
   document.getElementById('headerSub').textContent = 'Setup Required';
   document.getElementById('progressFill').style.width = '0%';
   chat.innerHTML = `
@@ -254,17 +208,38 @@ function showSetup(){
       Enter your company, project and Responsible Competent Person details.
     </div>
     <div class="setup-screen">
-      <div class="form-group"><label>Company Name (your employer)</label><input type="text" id="setupCompany" placeholder="e.g. ABC Construction Ltd"></div>
-      <div class="form-group"><label>Project Name</label><input type="text" id="setupProject" placeholder="e.g. Riverside Development"></div>
+      <div class="form-group"><label>Company Name (your employer)</label><input type="text" id="setupCompany" placeholder="e.g. ABC Construction Ltd" value="${state.setup?.company||''}"></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="setupProject" placeholder="e.g. Riverside Development" value="${state.setup?.project||''}"></div>
       <div class="form-row">
-        <div class="form-group"><label>Project Reference</label><input type="text" id="setupRef" placeholder="e.g. PRJ-2025-001"></div>
-        <div class="form-group"><label>Inspection Date</label><input type="date" id="setupDate" value="${new Date().toISOString().split('T')[0]}"></div>
+        <div class="form-group"><label>Project Reference</label><input type="text" id="setupRef" placeholder="e.g. PRJ-2025-001" value="${state.setup?.ref||''}"></div>
+        <div class="form-group"><label>Inspection Date</label><input type="date" id="setupDate" value="${state.setup?.date||new Date().toISOString().split('T')[0]}"></div>
       </div>
-      <div class="form-group"><label>Responsible Competent Person Name</label><input type="text" id="setupRCP" placeholder="Full name"></div>
-      <div class="form-group"><label>Responsible Competent Person Role / Position</label><input type="text" id="setupRCPRole" placeholder="e.g. Site Supervisor"></div>
+      <div class="form-group"><label>Responsible Competent Person Name</label><input type="text" id="setupRCP" placeholder="Full name" value="${state.setup?.rcp||''}"></div>
+      <div class="form-group"><label>Responsible Competent Person Role / Position</label><input type="text" id="setupRCPRole" placeholder="e.g. Site Supervisor" value="${state.setup?.rcpRole||''}"></div>
+      <div class="form-group">
+        <label>Company Logo (optional - will appear on PDF)</label>
+        <input type="file" id="setupLogo" accept="image/*" style="font-size:13px;color:var(--wa-text-dim)" onchange="handleLogoUpload(event)">
+        <div class="logo-preview" id="logoPreview">
+          ${state.setup?.logo ? `<img src="${state.setup.logo}" alt="Logo">` : ''}
+        </div>
+      </div>
       <button class="btn-primary" style="margin-top:10px" onclick="saveSetup()">Save & Start Inspection</button>
     </div>
   `;
+}
+
+function handleLogoUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result;
+    if(!state.setup) state.setup = {};
+    state.setup.logo = dataUrl;
+    const preview = document.getElementById('logoPreview');
+    if(preview) preview.innerHTML = `<img src="${dataUrl}" alt="Logo">`;
+  };
+  reader.readAsDataURL(file);
 }
 
 function saveSetup(){
@@ -275,15 +250,17 @@ function saveSetup(){
   const rcp = document.getElementById('setupRCP').value.trim();
   const rcpRole = document.getElementById('setupRCPRole').value.trim();
   if(!company || !project || !rcp){ alert('Please fill in Company, Project, and RCP Name.'); return; }
-  state.setup = {company, project, ref, date, rcp, rcpRole};
+  state.setup = {...state.setup, company, project, ref, date, rcp, rcpRole};
   state.phase = 'tool';
+  if(!state.allInspections) state.allInspections = [];
+  if(!state.toolCount) state.toolCount = 0;
   saveState();
   startToolIdentification();
 }
 
 function startToolIdentification(){
   const chat = document.getElementById('chatArea');
-  document.getElementById('headerSub').textContent = state.setup.project;
+  document.getElementById('headerSub').textContent = `Tool ${state.allInspections.length + 1} — Choose Owner`;
   document.getElementById('progressFill').style.width = '5%';
   chat.innerHTML = `
     <div class="msg msg-system">PUWER Inspection — ${state.setup.date}</div>
@@ -301,7 +278,7 @@ function startToolIdentification(){
         <button class="opt-btn" onclick="setOwner('Plant Hire')">Plant Hire</button>
         <button class="opt-btn" onclick="document.getElementById('ownerInput').focus()">Other (type)</button>
       </div>
-      <button class="btn-primary" style="margin-top:8px" onclick="confirmOwner()">Confirm Owner </button>
+      <button class="btn-primary" style="margin-top:8px" onclick="confirmOwner()">Confirm Owner ➤</button>
     </div>
   `;
 }
@@ -345,7 +322,7 @@ function askToolDetails(){
         <div class="form-group"><label>Asset / Serial No.</label><input type="text" id="toolSerial" placeholder="Optional"></div>
       </div>
       <div class="form-group"><label>Location on Site</label><input type="text" id="toolLocation" placeholder="e.g. Level 2, Zone B"></div>
-      <button class="btn-primary" onclick="confirmTool()">Next </button>
+      <button class="btn-primary" onclick="confirmTool()">Next ➤</button>
     </div>
   `;
 }
@@ -425,11 +402,11 @@ function setPower(hasPower){
       <div class="msg msg-out">
         <div class="options-row" style="flex-direction:column;align-items:stretch">
           <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (18V)')">🔋 Battery / Cordless (18V)</button>
-          <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (36V / 40V / 54V)')"> Battery / Cordless (36V+)</button>
+          <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (36V / 40V / 54V)')">🔋 Battery / Cordless (36V+)</button>
           <button class="opt-btn" onclick="selectPowerType('110V Mains (Site)')">🔌 110V Mains (Site)</button>
-          <button class="opt-btn" onclick="selectPowerType('240V Mains (Domestic)')">🔌 240V Mains (Domestic)</button>
+          <button class="opt-btn" onclick="selectPowerType('240V Mains (Domestic)')"> 240V Mains (Domestic)</button>
           <button class="opt-btn" onclick="selectPowerType('400V / 3-Phase')">⚡ 400V / 3-Phase</button>
-          <button class="opt-btn" onclick="selectPowerType('Petrol')"> Petrol</button>
+          <button class="opt-btn" onclick="selectPowerType('Petrol')">⛽ Petrol</button>
           <button class="opt-btn" onclick="selectPowerType('Diesel')">⛽ Diesel</button>
           <button class="opt-btn" onclick="selectPowerType('Pneumatic / Compressed Air')">💨 Pneumatic / Compressed Air</button>
           <button class="opt-btn" onclick="selectPowerType('Hydraulic')">🔧 Hydraulic</button>
@@ -468,13 +445,14 @@ function getFilteredQuestions(){
 function startQuestions(){
   state.currentQ = 0;
   state.answers = [];
+  state.photos = {};
   renderQuestion();
 }
 
 function renderQuestion(){
   const questions = getFilteredQuestions();
   const chat = document.getElementById('chatArea');
-  if(state.currentQ >= questions.length){ showSummary(); return; }
+  if(state.currentQ >= questions.length){ showToolCompleteOptions(); return; }
   const q = questions[state.currentQ];
   const total = questions.length;
   const pct = 15 + ((state.currentQ / total) * 70);
@@ -498,9 +476,7 @@ function renderQuestion(){
         <button class="opt-btn na" id="btnNA" onclick="answerQ('N/A')">— N/A</button>
       </div>
       <div class="photo-section">
-        <div class="photo-btns">
-          <button class="photo-btn" onclick="openPhoto(${q.id})"> Add Photo Evidence</button>
-        </div>
+        <button class="photo-btn" onclick="openPhoto(${q.id})"> Add Photo Evidence</button>
         <div class="photo-note">📐 Please use landscape orientation for clarity</div>
         <div id="photoPreview_${q.id}">
           ${hasExistingPhoto ? `<div class="photo-preview"><img src="${state.photos[q.id]}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${q.id})">✕</button></div>` : ''}
@@ -541,65 +517,27 @@ function nextQuestion(){
   renderQuestion();
 }
 
-function openPhoto(qId){
-  currentPhotoTarget = qId;
-  document.getElementById('photoModal').classList.add('active');
-  document.getElementById('photoCameraInput').value = '';
-  document.getElementById('photoUploadInput').value = '';
-}
-
-function closePhotoModal(){
-  document.getElementById('photoModal').classList.remove('active');
-  currentPhotoTarget = null;
-}
-
-function handlePhoto(e){
-  const file = e.target.files[0];
-  if(!file || !currentPhotoTarget) return;
-  const reader = new FileReader();
-  reader.onload = function(ev){
-    const dataUrl = ev.target.result;
-    if(!state.photos) state.photos = {};
-    state.photos[currentPhotoTarget] = dataUrl;
-    const previewDiv = document.getElementById('photoPreview_' + currentPhotoTarget);
-    if(previewDiv){
-      previewDiv.innerHTML = `<div class="photo-preview"><img src="${dataUrl}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${currentPhotoTarget})">✕</button></div>`;
-    }
-    closePhotoModal();
-    saveState();
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-function removePhoto(qId){
-  if(state.photos) delete state.photos[qId];
-  const previewDiv = document.getElementById('photoPreview_' + qId);
-  if(previewDiv) previewDiv.innerHTML = '';
-  saveState();
-}
-
-function showSummary(){
+// NEW: Show options after finishing a tool's questions
+function showToolCompleteOptions(){
   const questions = getFilteredQuestions();
   const chat = document.getElementById('chatArea');
   document.getElementById('progressFill').style.width = '90%';
-  document.getElementById('headerSub').textContent = 'Summary & Sign-off';
+  document.getElementById('headerSub').textContent = `Tool Complete — ${state.owner}`;
   
   let passCount = state.answers.filter(a=>a.answer==='Pass').length;
   let failCount = state.answers.filter(a=>a.answer==='Fail').length;
   let naCount = state.answers.filter(a=>a.answer==='N/A').length;
   
-  let summaryHTML = `
-    <div class="msg msg-system">Inspection Complete</div>
+  chat.innerHTML = `
+    <div class="msg msg-system">Tool Inspection Complete</div>
     <div class="msg msg-in">
       <div class="msg-label">PUWER Inspection Summary</div>
       <div class="report-section">
-        <h4>📋 ${state.toolInfo.name}</h4>
+        <h4> ${state.toolInfo.name}</h4>
         <div class="report-item"><span>Owner / Subcontractor</span><span class="sub-tag">${state.owner}</span></div>
         <div class="report-item"><span>Category</span><span>${state.toolInfo.category}</span></div>
         <div class="report-item"><span>Power Source</span><span>${state.powerSource}</span></div>
         <div class="report-item"><span>Location</span><span>${state.toolInfo.location || '—'}</span></div>
-        <div class="report-item"><span>Date</span><span>${state.setup.date}</span></div>
       </div>
       <div class="report-section">
         <h4>Results</h4>
@@ -607,28 +545,58 @@ function showSummary(){
         <div class="report-item"><span style="color:var(--wa-red)">✗ Fail</span><span>${failCount}</span></div>
         <div class="report-item"><span style="color:var(--wa-text-dim)">— N/A</span><span>${naCount}</span></div>
       </div>
-  `;
-  
-  if(failCount > 0){
-    summaryHTML += `<div class="report-section"><h4>⚠️ Failed Items</h4>`;
-    state.answers.filter(a=>a.answer==='Fail').forEach(a=>{
-      const q = questions.find(qq=>qq.id===a.qId);
-      summaryHTML += `<div class="report-item"><span style="color:var(--wa-red)">${q? q.text.substring(0,60)+'...' : 'Item'}</span></div>`;
-    });
-    summaryHTML += `</div>`;
-  }
-  
-  summaryHTML += `
-    </div>
-    <div class="msg msg-in">
-      <div class="msg-label">Responsible Competent Person Sign-off</div>
-      Please confirm the inspection and provide your signature.
-      <div style="margin-top:12px">
-        <button class="btn-primary" onclick="openSig()">✍️ Sign & Confirm</button>
+      <div class="msg-label" style="margin-top:12px">What would you like to do next?</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <button class="btn-primary" style="margin-top:0" onclick="addAnotherTool()">➕ Add Another Tool</button>
+        <button class="btn-secondary" style="margin-top:0" onclick="generateReport()">📄 Generate Final Report & Sign</button>
       </div>
     </div>
   `;
-  chat.innerHTML = summaryHTML;
+}
+
+function addAnotherTool(){
+  // Save current tool to allInspections (unsigned)
+  state.allInspections.push({
+    toolInfo: {...state.toolInfo},
+    owner: state.owner,
+    powerSource: state.powerSource,
+    hasPower: state.hasPower,
+    answers: [...state.answers],
+    photos: {...state.photos}
+  });
+  state.toolCount = state.allInspections.length;
+  
+  // Reset tool-specific state
+  state.toolInfo = null;
+  state.owner = '';
+  state.powerSource = null;
+  state.hasPower = null;
+  state.answers = [];
+  state.currentQ = 0;
+  state.photos = {};
+  state.phase = 'tool';
+  saveState();
+  
+  // Go back to owner selection
+  startToolIdentification();
+}
+
+function generateReport(){
+  // Save current tool to allInspections first
+  state.allInspections.push({
+    toolInfo: {...state.toolInfo},
+    owner: state.owner,
+    powerSource: state.powerSource,
+    hasPower: state.hasPower,
+    answers: [...state.answers],
+    photos: {...state.photos}
+  });
+  state.toolCount = state.allInspections.length;
+  state.phase = 'signature';
+  saveState();
+  
+  // Open signature pad
+  openSig();
 }
 
 function openSig(){
@@ -662,45 +630,114 @@ function confirmSig(){
   state.phase = 'done';
   saveState();
   closeSig();
-  const chat = document.getElementById('chatArea');
-  chat.innerHTML += `
-    <div class="msg msg-out">
-      <div class="msg-label">✓ Signed & Confirmed</div>
-      <img src="${state.signature}" style="max-width:200px;background:#fff;border-radius:4px;margin-top:4px;border:1px solid var(--wa-border)">
-      <div class="msg-time">${new Date().toLocaleString()}</div>
-    </div>
-    <div class="msg msg-in">
-      <div class="msg-label">✅ Inspection Complete</div>
-      PUWER inspection for <strong>${state.toolInfo.name}</strong> (${state.owner}) has been recorded.<br><br>
-      Use the menu () to generate a PDF report or start a new inspection.
-    </div>
-  `;
-  document.getElementById('progressFill').style.width = '100%';
-  document.getElementById('headerSub').textContent = '✓ Complete — ' + state.owner;
+  generatePDF();
+}
+
+function openPhoto(qId){
+  currentPhotoTarget = qId;
+  document.getElementById('photoModal').classList.add('active');
+  document.getElementById('photoInput').value = '';
+}
+
+function closePhotoModal(){
+  document.getElementById('photoModal').classList.remove('active');
+  currentPhotoTarget = null;
+}
+
+function handlePhoto(e){
+  const file = e.target.files[0];
+  if(!file || !currentPhotoTarget) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result;
+    if(!state.photos) state.photos = {};
+    state.photos[currentPhotoTarget] = dataUrl;
+    const previewDiv = document.getElementById('photoPreview_' + currentPhotoTarget);
+    if(previewDiv){
+      previewDiv.innerHTML = `<div class="photo-preview"><img src="${dataUrl}" alt="Evidence"><button class="photo-remove" onclick="removePhoto(${currentPhotoTarget})">✕</button></div>`;
+    }
+    closePhotoModal();
+    saveState();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removePhoto(qId){
+  if(state.photos) delete state.photos[qId];
+  const previewDiv = document.getElementById('photoPreview_' + qId);
+  if(previewDiv) previewDiv.innerHTML = '';
+  saveState();
 }
 
 function generatePDF(){
-  closeMenu();
-  const questions = getFilteredQuestions();
-  let rows = '';
-  state.answers.forEach(a=>{
-    const q = questions.find(qq=>qq.id===a.qId);
-    if(!q) return;
-    const color = a.answer==='Pass'?'#008069':a.answer==='Fail'?'#ea4335':'#667781';
-    const photoHtml = state.photos && state.photos[q.id] 
-      ? `<br><img src="${state.photos[q.id]}" style="max-width:200px;height:120px;object-fit:cover;border:1px solid #ddd;border-radius:4px;margin-top:4px">` 
-      : '';
-    rows += `<tr>
-      <td style="padding:6px;border:1px solid #ddd;font-size:11px">${q.category}</td>
-      <td style="padding:6px;border:1px solid #ddd;font-size:11px">${q.text}${photoHtml}</td>
-      <td style="padding:6px;border:1px solid #ddd;font-size:11px;color:${color};font-weight:700">${a.answer}</td>
-      <td style="padding:6px;border:1px solid #ddd;font-size:11px">${a.comment||''}</td>
-    </tr>`;
+  let allRows = '';
+  let allFailedItems = [];
+  
+  state.allInspections.forEach((inspection, idx) => {
+    const inspQuestions = puwerQuestions.filter(q => {
+      if(!q.requiresPower) return true;
+      if(!inspection.hasPower) return false;
+      if(q.powerTypes && q.powerTypes.length > 0){
+        return q.powerTypes.some(pt => inspection.powerSource.toLowerCase().includes(pt.toLowerCase()));
+      }
+      return true;
+    });
+    
+    inspection.answers.forEach(a=>{
+      const q = inspQuestions.find(qq=>qq.id===a.qId);
+      if(!q) return;
+      const color = a.answer==='Pass'?'#008069':a.answer==='Fail'?'#ea4335':'#667781';
+      const photoHtml = inspection.photos && inspection.photos[q.id] 
+        ? `<br><img src="${inspection.photos[q.id]}" style="max-width:200px;height:120px;object-fit:cover;border:1px solid #ddd;border-radius:4px;margin-top:4px">` 
+        : '';
+      allRows += `<tr>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px">${idx+1}</td>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px">${inspection.owner}</td>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px">${inspection.toolInfo.name}</td>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px">${q.category}</td>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px">${q.text}${photoHtml}</td>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px;color:${color};font-weight:700">${a.answer}</td>
+        <td style="padding:6px;border:1px solid #ddd;font-size:11px">${a.comment||''}</td>
+      </tr>`;
+      
+      if(a.answer === 'Fail'){
+        allFailedItems.push({
+          toolNum: idx+1,
+          owner: inspection.owner,
+          toolName: inspection.toolInfo.name,
+          question: q.text,
+          comment: a.comment
+        });
+      }
+    });
   });
+  
+  let failedSummaryHTML = '';
+  if(allFailedItems.length > 0){
+    failedSummaryHTML = `
+      <h2 style="color:#ea4335;margin-top:20px">⚠️ Failed Items Summary</h2>
+      <table style="width:100%;border-collapse:collapse;margin-top:8px">
+        <tr style="background:#fee"><th style="padding:6px;border:1px solid #ddd;font-size:11px">#</th><th style="padding:6px;border:1px solid #ddd;font-size:11px">Owner</th><th style="padding:6px;border:1px solid #ddd;font-size:11px">Tool</th><th style="padding:6px;border:1px solid #ddd;font-size:11px">Failed Check</th><th style="padding:6px;border:1px solid #ddd;font-size:11px">Comments</th></tr>
+        ${allFailedItems.map((item, i) => `
+          <tr>
+            <td style="padding:6px;border:1px solid #ddd;font-size:11px">${i+1}</td>
+            <td style="padding:6px;border:1px solid #ddd;font-size:11px">${item.owner}</td>
+            <td style="padding:6px;border:1px solid #ddd;font-size:11px">${item.toolName}</td>
+            <td style="padding:6px;border:1px solid #ddd;font-size:11px;color:#ea4335">${item.question.substring(0,80)}...</td>
+            <td style="padding:6px;border:1px solid #ddd;font-size:11px">${item.comment||'—'}</td>
+          </tr>
+        `).join('')}
+      </table>
+    `;
+  }
+  
+  const logoHtml = state.setup.logo ? `<img src="${state.setup.logo}" style="max-width:150px; margin-bottom:10px;"><br>` : '';
   
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PUWER Report</title>
   <style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px}h1{font-size:18px;color:#008069}h2{font-size:14px;margin-top:16px}table{width:100%;border-collapse:collapse;margin-top:8px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:8px 0}.meta span{font-size:11px}img{max-width:200px}</style>
   </head><body>
+  ${logoHtml}
   <h1>PUWER Inspection Report</h1>
   <div class="meta">
     <span><strong>Company:</strong> ${state.setup.company}</span>
@@ -708,18 +745,12 @@ function generatePDF(){
     <span><strong>Reference:</strong> ${state.setup.ref||'—'}</span>
     <span><strong>Date:</strong> ${state.setup.date}</span>
     <span><strong>RCP:</strong> ${state.setup.rcp} (${state.setup.rcpRole})</span>
-    <span><strong>Owner:</strong> ${state.owner}</span>
-  </div>
-  <h2>Equipment: ${state.toolInfo.name}</h2>
-  <div class="meta">
-    <span><strong>Category:</strong> ${state.toolInfo.category}</span>
-    <span><strong>Serial:</strong> ${state.toolInfo.serial||'—'}</span>
-    <span><strong>Power:</strong> ${state.powerSource}</span>
-    <span><strong>Location:</strong> ${state.toolInfo.location||'—'}</span>
+    <span><strong>Total Tools Inspected:</strong> ${state.allInspections.length}</span>
   </div>
   <h2>Inspection Results</h2>
-  <table><tr style="background:#f0f0f0"><th style="padding:6px;border:1px solid #ddd">Category</th><th style="padding:6px;border:1px solid #ddd">Question</th><th style="padding:6px;border:1px solid #ddd">Result</th><th style="padding:6px;border:1px solid #ddd">Comments</th></tr>${rows}</table>
-  ${state.signature ? `<h2>Signature</h2><img src="${state.signature}" style="max-width:250px;border:1px solid #ddd;border-radius:4px">` : ''}
+  <table><tr style="background:#f0f0f0"><th style="padding:6px;border:1px solid #ddd">#</th><th style="padding:6px;border:1px solid #ddd">Owner</th><th style="padding:6px;border:1px solid #ddd">Tool</th><th style="padding:6px;border:1px solid #ddd">Category</th><th style="padding:6px;border:1px solid #ddd">Question</th><th style="padding:6px;border:1px solid #ddd">Result</th><th style="padding:6px;border:1px solid #ddd">Comments</th></tr>${allRows}</table>
+  ${failedSummaryHTML}
+  ${state.signature ? `<h2>RCP Signature</h2><img src="${state.signature}" style="max-width:250px;border:1px solid #ddd;border-radius:4px">` : ''}
   <p style="margin-top:16px;font-size:10px;color:#888">Generated by PUWER Inspection App — ${new Date().toLocaleString()}</p>
   </body></html>`;
   
@@ -738,7 +769,7 @@ function backupData(){
   const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `PUWER_${state.owner||'backup'}_${state.setup?.date||'data'}.json`;
+  a.download = `PUWER_${state.setup?.project||'backup'}_${state.setup?.date||'data'}.json`;
   a.click();
 }
 
@@ -766,12 +797,11 @@ function resetSetup(){
 
 function resumeInspection(){
   if(state.phase==='questions') renderQuestion();
-  else if(state.phase==='done') showSummary();
+  else if(state.phase==='tool') startToolIdentification();
+  else if(state.phase==='signature') openSig();
+  else if(state.phase==='done') generatePDF();
   else showSetup();
 }
-
-function sendMsg(){}
-function handleKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();} }
 
 init();
 </script>
