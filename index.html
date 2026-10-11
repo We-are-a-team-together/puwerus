@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PUWER Inspection</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--wa-dark:#111b21;
+--wa-panel:#202c33;
+--wa-input:#2a3942;
+--wa-green:#00a884;
+--wa-green-dark:#008069;
+--wa-text:#e9edef;
+--wa-text-dim:#8696a0;
+--wa-border:#313d45;
+--wa-bubble-out:#005c4b;
+--wa-bubble-in:#202c33;
+--wa-red:#ea4335;
+--wa-orange:#f59e0b;
+--wa-blue:#3b82f6;
+}
+body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;background:var(--wa-dark);color:var(--wa-text);min-height:100vh;overflow-x:hidden}
+.app-container{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+
+/* Header */
+.header{background:var(--wa-panel);padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--wa-border);position:sticky;top:0;z-index:100}
+.header-avatar{width:40px;height:40px;border-radius:50%;background:var(--wa-green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
+.header-info{flex:1}
+.header-title{font-size:16px;font-weight:600;color:var(--wa-text)}
+.header-sub{font-size:12px;color:var(--wa-text-dim)}
+.header-btn{background:none;border:none;color:var(--wa-text-dim);font-size:20px;cursor:pointer;padding:8px}
+.header-btn:hover{color:var(--wa-text)}
+
+/* Chat Area */
+.chat-area{flex:1;padding:12px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background:var(--wa-dark)}
+.msg{max-width:85%;padding:8px 12px;border-radius:8px;font-size:14px;line-height:1.4;position:relative;word-wrap:break-word}
+.msg-in{background:var(--wa-bubble-in);align-self:flex-start;border-top-left-radius:0}
+.msg-out{background:var(--wa-bubble-out);align-self:flex-end;border-top-right-radius:0}
+.msg-system{background:var(--wa-input);align-self:center;font-size:12px;color:var(--wa-text-dim);border-radius:6px;padding:6px 14px;text-align:center}
+.msg-time{font-size:10px;color:var(--wa-text-dim);text-align:right;margin-top:4px}
+.msg-label{font-size:11px;color:var(--wa-green);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Input Bar */
+.input-bar{background:var(--wa-panel);padding:8px 12px;display:flex;align-items:flex-end;gap:8px;border-top:1px solid var(--wa-border);position:sticky;bottom:0}
+.input-bar textarea{flex:1;background:var(--wa-input);border:none;border-radius:20px;padding:10px 16px;color:var(--wa-text);font-size:14px;resize:none;max-height:100px;outline:none;font-family:inherit}
+.input-bar textarea::placeholder{color:var(--wa-text-dim)}
+.send-btn{width:42px;height:42px;border-radius:50%;background:var(--wa-green);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.send-btn:active{background:var(--wa-green-dark)}
+
+/* Buttons / Options */
+.options-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.opt-btn{padding:10px 18px;border-radius:20px;border:1px solid var(--wa-green);background:transparent;color:var(--wa-green);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
+.opt-btn:hover,.opt-btn.active{background:var(--wa-green);color:#fff}
+.opt-btn.danger{border-color:var(--wa-red);color:var(--wa-red)}
+.opt-btn.danger:hover,.opt-btn.danger.active{background:var(--wa-red);color:#fff}
+.opt-btn.warning{border-color:var(--wa-orange);color:var(--wa-orange)}
+.opt-btn.warning:hover,.opt-btn.warning.active{background:var(--wa-orange);color:#fff}
+.opt-btn.na{border-color:var(--wa-text-dim);color:var(--wa-text-dim)}
+.opt-btn.na:hover,.opt-btn.na.active{background:var(--wa-text-dim);color:#fff}
+
+/* Photo Section */
+.photo-section{margin:8px 0}
+.photo-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:16px;background:var(--wa-input);border:1px solid var(--wa-border);color:var(--wa-text-dim);font-size:12px;cursor:pointer;transition:all .2s}
+.photo-btn:hover{border-color:var(--wa-green);color:var(--wa-green)}
+.photo-preview{margin-top:8px;position:relative;display:inline-block}
+.photo-preview img{max-width:200px;border-radius:8px;border:2px solid var(--wa-border)}
+.photo-remove{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--wa-red);color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Setup Screen */
+.setup-screen{padding:20px 16px;overflow-y:auto;flex:1}
+.setup-title{font-size:20px;font-weight:700;color:var(--wa-text);margin-bottom:4px}
+.setup-sub{font-size:13px;color:var(--wa-text-dim);margin-bottom:20px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;color:var(--wa-text-dim);margin-bottom:6px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--wa-input);border:1px solid var(--wa-border);border-radius:8px;padding:12px 14px;color:var(--wa-text);font-size:14px;outline:none;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--wa-green)}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238696a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Signature Canvas */
+.sig-container{background:#fff;border-radius:12px;padding:4px;margin:8px 0;position:relative}
+.sig-container canvas{width:100%;height:150px;border-radius:8px;touch-action:none}
+.sig-clear{position:absolute;top:8px;right:8px;background:var(--wa-red);color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer}
+
+/* Question Card */
+.q-card{background:var(--wa-panel);border-radius:12px;padding:14px;margin:6px 0;border:1px solid var(--wa-border)}
+.q-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.q-number{font-size:11px;color:var(--wa-green);font-weight:700;text-transform:uppercase}
+.q-status{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600}
+.q-status.pass{background:rgba(0,168,132,0.15);color:var(--wa-green)}
+.q-status.fail{background:rgba(234,67,53,0.15);color:var(--wa-red)}
+.q-status.na-status{background:rgba(134,150,160,0.15);color:var(--wa-text-dim)}
+.q-text{font-size:14px;color:var(--wa-text);margin-bottom:10px;line-height:1.5}
+
+/* Progress Bar */
+.progress-bar{height:3px;background:var(--wa-border);margin:0}
+.progress-fill{height:100%;background:var(--wa-green);transition:width .3s ease}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--wa-panel);border-radius:16px;padding:24px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:18px;margin-bottom:16px;color:var(--wa-text)}
+
+/* Report Styles */
+.report-section{margin:12px 0;padding:12px;background:var(--wa-input);border-radius:8px}
+.report-section h4{font-size:13px;color:var(--wa-green);margin-bottom:8px}
+.report-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--wa-border);font-size:13px}
+.report-item:last-child{border-bottom:none}
+
+/* Subcontractor Tag */
+.sub-tag{display:inline-block;background:var(--wa-blue);color:#fff;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:6px;font-weight:600}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg{animation:fadeIn .3s ease}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--wa-border);border-radius:3px}
+
+/* Hidden file input */
+.file-input{display:none}
+
+/* Footer buttons */
+.footer-actions{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap}
+.footer-actions button{flex:1;min-width:120px;padding:12px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--wa-green);color:#fff}
+.btn-primary:hover{background:var(--wa-green-dark)}
+.btn-secondary{background:var(--wa-input);color:var(--wa-text);border:1px solid var(--wa-border)!important}
+.btn-secondary:hover{border-color:var(--wa-green)!important}
+.btn-danger{background:var(--wa-red);color:#fff}
+
+/* Owner selector */
+.owner-badge{display:flex;align-items:center;gap:8px;background:var(--wa-input);padding:8px 12px;border-radius:8px;margin:6px 0}
+.owner-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--wa-blue)}
+.owner-badge span{font-size:13px;color:var(--wa-text)}
+</style>
+</head>
+<body>
+<div class="app-container" id="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-avatar">PW</div>
+    <div class="header-info">
+      <div class="header-title">PUWER Inspection</div>
+      <div class="header-sub" id="headerSub">Setup Required</div>
+    </div>
+    <button class="header-btn" onclick="showMenu()">⋮</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <!-- Chat / Content Area -->
+  <div class="chat-area" id="chatArea"></div>
+
+  <!-- Input Bar -->
+  <div class="input-bar" id="inputBar" style="display:none">
+    <textarea id="msgInput" rows="1" placeholder="Type a message..." onkeydown="handleKey(event)"></textarea>
+    <button class="send-btn" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<!-- Menu Modal -->
+<div class="modal-overlay" id="menuModal">
+  <div class="modal">
+    <h3>⚙️ Menu</h3>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn-primary" onclick="generatePDF()">📄 Generate PDF Report</button>
+      <button class="btn-secondary" onclick="backupData()">💾 Backup Data</button>
+      <button class="btn-secondary" onclick="restoreData()">📂 Restore Data</button>
+      <button class="btn-secondary" onclick="resetSetup()">🔄 Reset Setup</button>
+      <button class="btn-danger" onclick="closeMenu()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Signature Modal -->
+<div class="modal-overlay" id="sigModal">
+  <div class="modal">
+    <h3>✍️ Responsible Competent Person Signature</h3>
+    <div class="sig-container">
+      <canvas id="sigCanvas" width="360" height="150"></canvas>
+      <button class="sig-clear" onclick="clearSig()">Clear</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn-primary" style="flex:1" onclick="confirmSig()">Confirm Signature</button>
+      <button class="btn-secondary" style="flex:1" onclick="closeSig()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Photo Modal -->
+<div class="modal-overlay" id="photoModal">
+  <div class="modal">
+    <h3>📷 Capture Photo</h3>
+    <p style="font-size:13px;color:var(--wa-text-dim);margin-bottom:12px">Take a clear photo of the tool/issue.</p>
+    <input type="file" id="photoInput" accept="image/*" capture="environment" class="file-input" onchange="handlePhoto(event)">
+    <div style="display:flex;gap:8px">
+      <button class="btn-primary" style="flex:1" onclick="document.getElementById('photoInput').click()">📸 Capture</button>
+      <button class="btn-secondary" style="flex:1" onclick="closePhotoModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== STATE ====================
+let state = {
+  setup: null,
+  toolInfo: null,
+  owner: '',
+  powerSource: null,
+  hasPower: null,
+  answers: [],
+  currentQ: 0,
+  phase: 'setup', // setup, tool, power, questions, sign, done
+  photos: {},
+  signature: null,
+  inspectionDate: new Date().toISOString()
+};
+
+let currentPhotoTarget = null;
+let sigCtx = null;
+let isDrawing = false;
+
+// ==================== PUWER QUESTIONS ====================
+const puwerQuestions = [
+  {id:1, text:"Is the equipment suitable for the intended task and work environment?", category:"Suitability", requiresPower:false},
+  {id:2, text:"Is the equipment in good working condition with no visible damage, cracks, or excessive wear?", category:"Condition", requiresPower:false},
+  {id:3, text:"Are all guards, shields, and protective covers in place and securely fitted?", category:"Guarding", requiresPower:false},
+  {id:4, text:"Are all safety devices (emergency stops, interlocks, dead-man switches) functioning correctly?", category:"Safety Devices", requiresPower:true},
+  {id:5, text:"Are all controls clearly marked, identifiable, and functioning correctly?", category:"Controls", requiresPower:true},
+  {id:6, text:"Is the power cable / hose / supply in good condition with no fraying, cuts, or damage?", category:"Power Supply", requiresPower:true},
+  {id:7, text:"Is the plug, connector, or coupling in good condition and correctly rated?", category:"Power Supply", requiresPower:true},
+  {id:8, text:"Is the equipment properly earthed / grounded (where applicable)?", category:"Electrical Safety", requiresPower:true, powerTypes:["110V","240V","400V"]},
+  {id:9, text:"Is the battery in good condition with no swelling, leakage, or damage to terminals?", category:"Battery Safety", requiresPower:true, powerTypes:["Battery","18V","36V","40V","54V"]},
+  {id:10, text:"Is the fuel system (tank, cap, lines) free from leaks and damage?", category:"Fuel System", requiresPower:true, powerTypes:["Petrol","Diesel"]},
+  {id:11, text:"Are pneumatic/hydraulic hoses, fittings, and connections in good condition?", category:"Pneumatic/Hydraulic", requiresPower:true, powerTypes:["Pneumatic","Hydraulic","Compressed Air"]},
+  {id:12, text:"Is the equipment stable and secure during operation (no excessive vibration, movement, or risk of tipping)?", category:"Stability", requiresPower:false},
+  {id:13, text:"Are all accessories, attachments, and consumables (blades, discs, bits) in good condition and correctly fitted?", category:"Accessories", requiresPower:false},
+  {id:14, text:"Are warning labels, safety markings, and operating instructions visible and legible?", category:"Markings", requiresPower:false},
+  {id:15, text:"Is the equipment clean and free from contamination (oil, grease, debris, dust buildup)?", category:"Cleanliness", requiresPower:false},
+  {id:16, text:"Has the equipment been subject to regular maintenance and servicing as per manufacturer's schedule?", category:"Maintenance", requiresPower:false},
+  {id:17, text:"Is the equipment stored/positioned safely when not in use (no trip hazards, protected from weather)?", category:"Storage", requiresPower:false},
+  {id:18, text:"Are operators/users trained and competent to use this specific equipment?", category:"Training", requiresPower:false},
+  {id:19, text:"Is there adequate lighting in the work area for safe operation of this equipment?", category:"Environment", requiresPower:false},
+  {id:20, text:"Are there any additional defects, hazards, or concerns not covered above?", category:"Additional", requiresPower:false}
+];
+
+// ==================== SETUP ====================
+function init(){
+  const saved = localStorage.getItem('puwer_state');
+  if(saved){
+    try{ state = JSON.parse(saved); }catch(e){}
+  }
+  if(state.setup && state.phase !== 'setup'){
+    resumeInspection();
+  } else {
+    showSetup();
+  }
+}
+
+function showSetup(){
+  state.phase = 'setup';
+  const chat = document.getElementById('chatArea');
+  document.getElementById('inputBar').style.display = 'none';
+  document.getElementById('headerSub').textContent = 'Setup Required';
+  document.getElementById('progressFill').style.width = '0%';
+  
+  chat.innerHTML = `
+    <div class="msg msg-system">PUWER Inspection Setup</div>
+    <div class="msg msg-in">
+      <div class="msg-label">Site & Responsible Competent Person Setup</div>
+      Enter your company, project and Responsible Competent Person details.
+    </div>
+    <div class="setup-screen">
+      <div class="form-group">
+        <label>Company Name (your employer)</label>
+        <input type="text" id="setupCompany" placeholder="e.g. ABC Construction Ltd">
+      </div>
+      <div class="form-group">
+        <label>Project Name</label>
+        <input type="text" id="setupProject" placeholder="e.g. Riverside Development">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Project Reference</label>
+          <input type="text" id="setupRef" placeholder="e.g. PRJ-2025-001">
+        </div>
+        <div class="form-group">
+          <label>Inspection Date</label>
+          <input type="date" id="setupDate" value="${new Date().toISOString().split('T')[0]}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Responsible Competent Person Name</label>
+        <input type="text" id="setupRCP" placeholder="Full name">
+      </div>
+      <div class="form-group">
+        <label>Responsible Competent Person Role / Position</label>
+        <input type="text" id="setupRCPRole" placeholder="e.g. Site Supervisor">
+      </div>
+      <div class="form-group">
+        <label>Company Logo (optional):</label>
+        <input type="file" id="setupLogo" accept="image/*" style="font-size:13px;color:var(--wa-text-dim)">
+      </div>
+      <button class="btn-primary" style="width:100%;padding:14px;font-size:15px;margin-top:10px" onclick="saveSetup()">Save & Start Inspection</button>
+    </div>
+  `;
+}
+
+function saveSetup(){
+  const company = document.getElementById('setupCompany').value.trim();
+  const project = document.getElementById('setupProject').value.trim();
+  const ref = document.getElementById('setupRef').value.trim();
+  const date = document.getElementById('setupDate').value;
+  const rcp = document.getElementById('setupRCP').value.trim();
+  const rcpRole = document.getElementById('setupRCPRole').value.trim();
+  
+  if(!company || !project || !rcp){
+    alert('Please fill in Company, Project, and RCP Name.');
+    return;
+  }
+  
+  state.setup = {company, project, ref, date, rcp, rcpRole};
+  state.phase = 'tool';
+  saveState();
+  startToolIdentification();
+}
+
+// ==================== TOOL IDENTIFICATION ====================
+function startToolIdentification(){
+  const chat = document.getElementById('chatArea');
+  document.getElementById('headerSub').textContent = state.setup.project;
+  document.getElementById('progressFill').style.width = '5%';
+  
+  chat.innerHTML = `
+    <div class="msg msg-system">PUWER Inspection — ${state.setup.date}</div>
+    <div class="msg msg-in">
+      <div class="msg-label">Step 1: Tool Owner / Subcontractor</div>
+      Who is the <strong>owner</strong> of the tool you are about to inspect?<br><br>
+      <em style="font-size:12px;color:var(--wa-text-dim)">This allows you to generate a single report for all subcontractors on site.</em>
+    </div>
+    <div class="msg msg-out" style="max-width:95%">
+      <div class="form-group" style="margin:0">
+        <input type="text" id="ownerInput" placeholder="e.g. Smith Groundworks Ltd" style="width:100%">
+      </div>
+      <div class="options-row" style="margin-top:8px">
+        <button class="opt-btn" onclick="setOwner('Self / Direct Labour')">Self / Direct Labour</button>
+        <button class="opt-btn" onclick="setOwner('Plant Hire')">Plant Hire</button>
+        <button class="opt-btn" onclick="document.getElementById('ownerInput').focus()">Other (type)</button>
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:8px;padding:10px" onclick="confirmOwner()">Confirm Owner ➤</button>
+    </div>
+  `;
+}
+
+function setOwner(val){
+  document.getElementById('ownerInput').value = val;
+}
+
+function confirmOwner(){
+  const owner = document.getElementById('ownerInput').value.trim();
+  if(!owner){ alert('Please enter the tool owner / subcontractor name.'); return; }
+  state.owner = owner;
+  saveState();
+  askToolDetails();
+}
+
+function askToolDetails(){
+  const chat = document.getElementById('chatArea');
+  document.getElementById('progressFill').style.width = '10%';
+  
+  chat.innerHTML += `
+    <div class="msg msg-in">
+      <div class="msg-label">Step 2: Identify the Tool</div>
+      Please provide details of the equipment being inspected.
+    </div>
+    <div class="msg msg-out" style="max-width:95%">
+      <div class="form-group"><label>Tool / Equipment Name</label><input type="text" id="toolName" placeholder="e.g. Bosch GBH 2-26 DRE"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Category</label>
+          <select id="toolCategory">
+            <option value="">Select...</option>
+            <option>Hand Tool (non-powered)</option>
+            <option>Power Tool - Corded</option>
+            <option>Power Tool - Cordless</option>
+            <option>Power Tool - Petrol/Diesel</option>
+            <option>Power Tool - Pneumatic</option>
+            <option>Power Tool - Hydraulic</option>
+            <option>Fixed Machinery</option>
+            <option>Access Equipment</option>
+            <option>Lifting Equipment</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Asset / Serial No.</label><input type="text" id="toolSerial" placeholder="Optional"></div>
+      </div>
+      <div class="form-group"><label>Location on Site</label><input type="text" id="toolLocation" placeholder="e.g. Level 2, Zone B"></div>
+      <button class="btn-primary" style="width:100%;padding:12px;margin-top:8px" onclick="confirmTool()">Next: Power Source ➤</button>
+    </div>
+  `;
+}
+
+function confirmTool(){
+  const name = document.getElementById('toolName').value.trim();
+  const category = document.getElementById('toolCategory').value;
+  const serial = document.getElementById('toolSerial').value.trim();
+  const location = document.getElementById('toolLocation').value.trim();
+  
+  if(!name || !category){ alert('Please enter tool name and select a category.'); return; }
+  
+  state.toolInfo = {name, category, serial, location};
+  state.phase = 'power';
+  saveState();
+  askPowerSource();
+}
+
+// ==================== POWER SOURCE (CONDITIONAL) ====================
+function askPowerSource(){
+  const chat = document.getElementById('chatArea');
+  document.getElementById('progressFill').style.width = '15%';
+  
+  chat.innerHTML += `
+    <div class="msg msg-in">
+      <div class="msg-label">Step 3: Power Source</div>
+      Does <strong>${state.toolInfo.name}</strong> require a power source to operate?
+    </div>
+    <div class="msg msg-out">
+      <div class="options-row">
+        <button class="opt-btn" id="pwrYes" onclick="setPower(true)">⚡ Yes, it needs power</button>
+        <button class="opt-btn na" id="pwrNo" onclick="setPower(false)">🚫 No power required</button>
+      </div>
+    </div>
+  `;
+}
+
+function setPower(hasPower){
+  state.hasPower = hasPower;
+  
+  if(!hasPower){
+    // No power - skip power questions
+    state.powerSource = 'None (non-powered)';
+    state.phase = 'questions';
+    saveState();
+    
+    const chat = document.getElementById('chatArea');
+    chat.innerHTML += `
+      <div class="msg msg-in">
+        <div class="msg-label">Power Source</div>
+        Marked as <strong>N/A</strong> — non-powered tool.<br>
+        <em style="font-size:12px;color:var(--wa-text-dim)">Questions specific to power supply, electrical safety, batteries, and fuel systems will be skipped.</em>
+      </div>
+    `;
+    setTimeout(()=> startQuestions(), 800);
+  } else {
+    // Has power - ask what type
+    const chat = document.getElementById('chatArea');
+    chat.innerHTML += `
+      <div class="msg msg-in">
+        <div class="msg-label">Power Source Type</div>
+        What type of power source does <strong>${state.toolInfo.name}</strong> use?
+      </div>
+      <div class="msg msg-out">
+        <div class="options-row" style="flex-direction:column;align-items:stretch">
+          <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (18V)')">🔋 Battery / Cordless (18V)</button>
+          <button class="opt-btn" onclick="selectPowerType('Battery / Cordless (36V / 40V / 54V)')">🔋 Battery / Cordless (36V+)</button>
+          <button class="opt-btn" onclick="selectPowerType('110V Mains (Site)')">🔌 110V Mains (Site)</button>
+          <button class="opt-btn" onclick="selectPowerType('240V Mains (Domestic)')">🔌 240V Mains (Domestic)</button>
+          <button class="opt-btn" onclick="selectPowerType('400V / 3-Phase')">⚡ 400V / 3-Phase</button>
+          <button class="opt-btn" onclick="selectPowerType('Petrol')">⛽ Petrol</button>
+          <button class="opt-btn" onclick="selectPowerType('Diesel')">⛽ Diesel</button>
+          <button class="opt-btn" onclick="selectPowerType('Pneumatic / Compressed Air')">💨 Pneumatic / Compressed Air</button>
+          <button class="opt-btn" onclick="selectPowerType('Hydraulic')">🔧 Hydraulic</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function selectPowerType(type){
+  state.powerSource = type;
+  state.phase = 'questions';
+  saveState();
+  
+  const chat = document.getElementById('chatArea');
+  chat.innerHTML += `
+    <div class="msg msg-in">
+      <div class="msg-label">Power Source Confirmed</div>
+      Power source: <strong>${type}</strong><br>
+      <em style="font-size:12px;color:var(--wa-text-dim)">Relevant power-specific questions will be included in the inspection.</em>
+    </div>
+  `;
+  setTimeout(()=> startQuestions(), 800);
+}
+
+// ==================== INSPECTION QUESTIONS ====================
+function getFilteredQuestions(){
+  return puwerQuestions.filter(q => {
+    if(!q.requiresPower) return true;
+    if(!state.hasPower) return false;
+    // If question has specific power types, check if our power source matches
+    if(q.powerTypes && q.powerTypes.length > 0){
+      return q.powerTypes.some(pt => state.powerSource.toLowerCase().includes(pt.toLowerCase()));
+    }
+    return true;
+  });
+}
+
+function startQuestions(){
+  state.currentQ = 0;
+  state.answers = [];
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const questions = getFilteredQuestions();
+  const chat = document.getElementById('chatArea');
+  
+  if(state.currentQ >= questions.length){
+    showSummary();
+    return;
+  }
+  
+  const q = questions[state.currentQ];
+  const total = questions.length;
+  const pct = 15 + ((state.currentQ / total) * 70);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('headerSub').textContent = `Q${state.currentQ+1} of ${total} — ${state.owner}`;
+  
+  // Build N/A option logic
+  const canBeNA = q.requiresPower && state.hasPower;
+  // Actually, any question can be N/A if truly not applicable
+  const showNA = true;
+  
+  chat.innerHTML = `
+    <div class="msg msg-system">Question ${state.currentQ+1} of ${total}</div>
+    <div class="q-card">
+      <div class="q-card-header">
+        <span class="q-number">${q.category}</span>
+        <span class="q-status" id="qStatus">Pending</span>
+      </div>
+      <div class="q-text">${q.text}</div>
+      ${q.requiresPower && state.hasPower ? `<div style="font-size:11px;color:var(--wa-blue);margin-bottom:8px">⚡ Power-related: ${state.powerSource}</div>` : ''}
+      <div class="options-row">
+        <button class="opt-btn" id="btnPass" onclick="answerQ('Pass')">✓ Pass</button>
+        <button class="opt-btn danger" id="btnFail" onclick="answerQ('Fail')">✗ Fail</button>
+        ${showNA ? `<button class="opt-btn na" id="btnNA" onclick="answerQ('N/A')">— N/A</button>` : ''}
+      </div>
+      <div class="photo-section">
+        <button class="photo-btn" onclick="openPhoto(${q.id})">📷 Add Photo Evidence</button>
+        <div id="photoPreview_${q.id}"></div>
+      </div>
+      <div class="form-group" style="margin-top:8px">
+        <label>Comments / Observations (optional)</label>
+        <textarea id="qComment" rows="2" placeholder="Add any notes..."></textarea>
+      </div>
+      <button class="btn-primary" style="width:100%;padding:12px;margin-top:8px" onclick="nextQuestion()">Next Question ➤</button>
+    </div>
+  `;
+}
+
+function answerQ(val){
+  document.getElementById('qStatus').textContent = val;
+  document.getElementById('qStatus').className = 'q-status ' + (val==='Pass'?'pass':val==='Fail'?'fail':'na-status');
+  
+  // Highlight active button
+  document.querySelectorAll('.q-card .opt-btn').forEach(b=>b.classList.remove('active'));
+  if(val==='Pass') document.getElementById('btnPass').classList.add('active');
+  if(val==='Fail') document.getElementById('btnFail').classList.add('active');
+  if(val==='N/A' && document.getElementById('btnNA')) document.getElementById('btnNA').classList.add('active');
+  
+  // Store temp answer
+  const questions = getFilteredQuestions();
+  const q = questions[state.currentQ];
+  const existing = state.answers.find(a=>a.qId===q.id);
+  if(existing){
+    existing.answer = val;
+    existing.comment = document.getElementById('qComment').value;
+  } else {
+    state.answers.push({qId:q.id, answer:val, comment:''});
+  }
+}
+
+function nextQuestion(){
+  const questions = getFilteredQuestions();
+  const q = questions[state.currentQ];
+  const existing = state.answers.find(a=>a.qId===q.id);
+  
+  if(!existing || !existing.answer){
+    alert('Please select Pass, Fail, or N/A before continuing.');
+    return;
+  }
+  existing.comment = document.getElementById('qComment').value;
+  
+  state.currentQ++;
+  saveState();
+  renderQuestion();
+}
+
+// ==================== PHOTO HANDLING ====================
+function openPhoto(qId){
+  currentPhotoTarget = qId;
+  document.getElementById('photoModal').classList.add('active');
+}
+
+function closePhotoModal(){
+  document.getElementById('photoModal').classList.remove('active');
+  currentPhotoTarget = null;
+}
+
+function handlePhoto(e){
+  const file = e.target.files[0];
+  if(!file || !currentPhotoTarget) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const dataUrl = ev.target.result;
+    if(!state.photos) state.photos = {};
+    state.photos[currentPhotoTarget] = dataUrl;
+    
+    // Show preview
+    const previewDiv = document.getElementById('photoPreview_' + currentPhotoTarget);
+    if(previewDiv){
+      previewDiv.innerHTML = `
+        <div class="photo-preview">
+          <img src="${dataUrl}" alt="Evidence">
+          <button class="photo-remove" onclick="removePhoto(${currentPhotoTarget})">✕</button>
+        </div>
+      `;
+    }
+    closePhotoModal();
+    saveState();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removePhoto(qId){
+  if(state.photos) delete state.photos[qId];
+  const previewDiv = document.getElementById('photoPreview_' + qId);
+  if(previewDiv) previewDiv.innerHTML = '';
+  saveState();
+}
+
+// ==================== SUMMARY & SIGNATURE ====================
+function showSummary(){
+  const questions = getFilteredQuestions();
+  const chat = document.getElementById('chatArea');
+  document.getElementById('progressFill').style.width = '90%';
+  document.getElementById('headerSub').textContent = 'Summary & Sign-off';
+  
+  let passCount = state.answers.filter(a=>a.answer==='Pass').length;
+  let failCount = state.answers.filter(a=>a.answer==='Fail').length;
+  let naCount = state.answers.filter(a=>a.answer==='N/A').length;
+  
+  let summaryHTML = `
+    <div class="msg msg-system">Inspection Complete</div>
+    <div class="msg msg-in">
+      <div class="msg-label">PUWER Inspection Summary</div>
+      <div class="report-section">
+        <h4>📋 ${state.toolInfo.name}</h4>
+        <div class="report-item"><span>Owner / Subcontractor</span><span class="sub-tag">${state.owner}</span></div>
+        <div class="report-item"><span>Category</span><span>${state.toolInfo.category}</span></div>
+        <div class="report-item"><span>Power Source</span><span>${state.powerSource}</span></div>
+        <div class="report-item"><span>Location</span><span>${state.toolInfo.location || '—'}</span></div>
+        <div class="report-item"><span>Date</span><span>${state.setup.date}</span></div>
+      </div>
+      <div class="report-section">
+        <h4>Results</h4>
+        <div class="report-item"><span style="color:var(--wa-green)">✓ Pass</span><span>${passCount}</span></div>
+        <div class="report-item"><span style="color:var(--wa-red)">✗ Fail</span><span>${failCount}</span></div>
+        <div class="report-item"><span style="color:var(--wa-text-dim)">— N/A</span><span>${naCount}</span></div>
+      </div>
+  `;
+  
+  // List failed items
+  if(failCount > 0){
+    summaryHTML += `<div class="report-section"><h4>⚠️ Failed Items</h4>`;
+    state.answers.filter(a=>a.answer==='Fail').forEach(a=>{
+      const q = questions.find(qq=>qq.id===a.qId);
+      summaryHTML += `<div class="report-item"><span style="color:var(--wa-red)">${q? q.text.substring(0,60)+'...' : 'Item'}</span></div>`;
+    });
+    summaryHTML += `</div>`;
+  }
+  
+  summaryHTML += `
+    </div>
+    <div class="msg msg-in">
+      <div class="msg-label">Responsible Competent Person Sign-off</div>
+      Please confirm the inspection and provide your signature.
+      <div style="margin-top:12px">
+        <button class="btn-primary" style="width:100%;padding:14px" onclick="openSig()">✍️ Sign & Confirm</button>
+      </div>
+    </div>
+  `;
+  
+  chat.innerHTML = summaryHTML;
+}
+
+// ==================== SIGNATURE ====================
+function openSig(){
+  document.getElementById('sigModal').classList.add('active');
+  const canvas = document.getElementById('sigCanvas');
+  sigCtx = canvas.getContext('2d');
+  sigCtx.fillStyle = '#fff';
+  sigCtx.fillRect(0,0,canvas.width,canvas.height);
+  sigCtx.strokeStyle = '#000';
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round';
+  
+  canvas.addEventListener('mousedown', sigStart);
+  canvas.addEventListener('mousemove', sigMove);
+  canvas.addEventListener('mouseup', sigEnd);
+  canvas.addEventListener('touchstart', sigTouchStart, {passive:false});
+  canvas.addEventListener('touchmove', sigTouchMove, {passive:false});
+  canvas.addEventListener('touchend', sigEnd);
+}
+
+function sigStart(e){ isDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(e.offsetX, e.offsetY); }
+function sigMove(e){ if(!isDrawing) return; sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); }
+function sigEnd(){ isDrawing=false; }
+function sigTouchStart(e){ e.preventDefault(); const t=e.touches[0]; const r=e.target.getBoundingClientRect(); isDrawing=true; sigCtx.beginPath(); sigCtx.moveTo(t.clientX-r.left, t.clientY-r.top); }
+function sigTouchMove(e){ e.preventDefault(); if(!isDrawing) return; const t=e.touches[0]; const r=e.target.getBoundingClientRect(); sigCtx.lineTo(t.clientX-r.left, t.clientY-r.top); sigCtx.stroke(); }
+
+function clearSig(){
+  sigCtx.fillStyle='#fff';
+  sigCtx.fillRect(0,0,360,150);
+}
+
+function closeSig(){
+  document.getElementById('sigModal').classList.remove('active');
+}
+
+function confirmSig(){
+  const canvas = document.getElementById('sigCanvas');
+  state.signature = canvas.toDataURL();
+  state.phase = 'done';
+  saveState();
+  closeSig();
+  
+  const chat = document.getElementById('chatArea');
+  chat.innerHTML += `
+    <div class="msg msg-out">
+      <div class="msg-label">✓ Signed & Confirmed</div>
+      <img src="${state.signature}" style="max-width:200px;background:#fff;border-radius:4px;margin-top:4px">
+      <div class="msg-time">${new Date().toLocaleString()}</div>
+    </div>
+    <div class="msg msg-in">
+      <div class="msg-label">✅ Inspection Complete</div>
+      PUWER inspection for <strong>${state.toolInfo.name}</strong> (${state.owner}) has been recorded.<br><br>
+      Use the menu (⋮) to generate a PDF report or start a new inspection.
+    </div>
+  `;
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('headerSub').textContent = '✓ Complete — ' + state.owner;
+}
+
+// ==================== PDF GENERATION ====================
+function generatePDF(){
+  closeMenu();
+  const questions = getFilteredQuestions();
+  
+  let rows = '';
+  state.answers.forEach(a=>{
+    const q = questions.find(qq=>qq.id===a.qId);
+    if(!q) return;
+    const color = a.answer==='Pass'?'#00a884':a.answer==='Fail'?'#ea4335':'#8696a0';
+    rows += `<tr>
+      <td style="padding:6px;border:1px solid #ddd;font-size:11px">${q.category}</td>
+      <td style="padding:6px;border:1px solid #ddd;font-size:11px">${q.text}</td>
+      <td style="padding:6px;border:1px solid #ddd;font-size:11px;color:${color};font-weight:700">${a.answer}</td>
+      <td style="padding:6px;border:1px solid #ddd;font-size:11px">${a.comment||''}</td>
+    </tr>`;
+  });
+  
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PUWER Report</title>
+  <style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px}h1{font-size:18px;color:#00a884}h2{font-size:14px;margin-top:16px}table{width:100%;border-collapse:collapse;margin-top:8px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:8px 0}.meta span{font-size:11px}</style>
+  </head><body>
+  <h1>PUWER Inspection Report</h1>
+  <div class="meta">
+    <span><strong>Company:</strong> ${state.setup.company}</span>
+    <span><strong>Project:</strong> ${state.setup.project}</span>
+    <span><strong>Reference:</strong> ${state.setup.ref||'—'}</span>
+    <span><strong>Date:</strong> ${state.setup.date}</span>
+    <span><strong>RCP:</strong> ${state.setup.rcp} (${state.setup.rcpRole})</span>
+    <span><strong>Owner:</strong> ${state.owner}</span>
+  </div>
+  <h2>Equipment: ${state.toolInfo.name}</h2>
+  <div class="meta">
+    <span><strong>Category:</strong> ${state.toolInfo.category}</span>
+    <span><strong>Serial:</strong> ${state.toolInfo.serial||'—'}</span>
+    <span><strong>Power:</strong> ${state.powerSource}</span>
+    <span><strong>Location:</strong> ${state.toolInfo.location||'—'}</span>
+  </div>
+  <h2>Inspection Results</h2>
+  <table><tr style="background:#f0f0f0"><th style="padding:6px;border:1px solid #ddd">Category</th><th style="padding:6px;border:1px solid #ddd">Question</th><th style="padding:6px;border:1px solid #ddd">Result</th><th style="padding:6px;border:1px solid #ddd">Comments</th></tr>${rows}</table>
+  ${state.signature ? `<h2>Signature</h2><img src="${state.signature}" style="max-width:250px;border:1px solid #ddd;border-radius:4px">` : ''}
+  <p style="margin-top:16px;font-size:10px;color:#888">Generated by PUWER Inspection App — ${new Date().toLocaleString()}</p>
+  </body></html>`;
+  
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
+
+// ==================== UTILITIES ====================
+function saveState(){
+  try{ localStorage.setItem('puwer_state', JSON.stringify(state)); }catch(e){}
+}
+
+function showMenu(){ document.getElementById('menuModal').classList.add('active'); }
+function closeMenu(){ document.getElementById('menuModal').classList.remove('active'); }
+
+function backupData(){
+  closeMenu();
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `PUWER_${state.owner||'backup'}_${state.setup?.date||'data'}.json`;
+  a.click();
+}
+
+function restoreData(){
+  closeMenu();
+  const input = document.createElement('input');
+  input.type='file'; input.accept='.json';
+  input.onchange = e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{ state=JSON.parse(ev.target.result); saveState(); location.reload(); }
+      catch(err){ alert('Invalid backup file.'); }
+    };
+    r.readAsText(f);
+  };
+  input.click();
+}
+
+function resetSetup(){
+  if(!confirm('Reset all data and start fresh?')) return;
+  localStorage.removeItem('puwer_state');
+  location.reload();
+}
+
+function resumeInspection(){
+  // Simplified resume - restart from current phase
+  if(state.phase==='questions') renderQuestion();
+  else if(state.phase==='done') showSummary();
+  else showSetup();
+}
+
+function sendMsg(){}
+function handleKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();} }
+
+// ==================== INIT ====================
+init();
+</script>
+</body>
+</html>
